@@ -1,0 +1,227 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+/* Add your custom styles here */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: scroll;
+}
+
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.logo {
+    color: #ff7200;
+    font-size: 24px;
+}
+
+.menu ul {
+    list-style: none;
+    display: flex;
+}
+
+.menu li {
+    margin-left: 20px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+    .menu a:hover {
+        color: #ff7200;
+    }
+
+
+
+main {
+    flex: 1;
+    padding: 0px;
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the maximum height */
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 0px;
+    width: 100%;
+}
+
+.form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+.table {
+    margin-top: 20px;
+}
+
+img {
+    max-width: 100%;
+    background-size: auto;
+    display: flex;
+    margin-left: 0%;
+    margin-right: 0%;
+}
+
+.logos img {
+    float: left;
+    width: 400px;
+    height: 70px;
+}
+
+.button {
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.2s;
+    cursor: pointer;
+}
+
+.inputs {
+    text-align: left;
+    height: 50%;
+    Width: 500px;
+}
+
+.FullName {
+    width: 500px;
+}
+
+.button1 {
+    background-color: white;
+    color: black;
+    border: 2px solid #De032f;
+}
+
+    .button1:hover {
+        background-color: #De032f;
+        color: white;
+    }
+
+.button2 {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+
+    .button2:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+.inputGrid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    color: black;
+    text-align: center;
+}
+
+th {
+    background-color: #c6b79a;
+    color: black;
+}
+
+.partnersAction .productsAction {
+    display: inline-flex;
+}
+
+.bomGrid {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+}
+
+.cards {
+    box-shadow: 0 0 3px black;
+    padding: 20px
+}
+
+.button3 {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+    margin-top: 50px;
+}
+
+    .button3:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+
+        .btn-login,
+        .btn-register {
+            width: 100%;
+        }
+
+        .login-form,
+        .register-form {
+            display: none;
+        }
+
+        .active-form {
+            display: block;
+        }
+

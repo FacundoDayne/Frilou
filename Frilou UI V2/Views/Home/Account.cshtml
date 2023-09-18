@@ -1,0 +1,46 @@
+﻿
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<main>
+    <h3>Employees</h3>
+
+    <table>
+        <tr>
+            <th>Employee name</th>
+            <th>Position</th>
+            <th>Status</th>
+        </tr>
+    </table><br>
+    <button style="" class="button button1" onclick="location.href='@Url.Action("EditEmployees")'">Edit Employees</button><br><br>
+
+    <h3>Partners</h3>
+    <div>
+        <table>
+            <tr>
+                <th>Partner name</th>
+                <th>Partner Type</th>
+                <th>Status</th>
+            </tr>
+        </table>
+    </div><br>
+
+    <div class="partnersAction">
+        <button class="button button2" onclick="location.href='@Url.Action("AddPartner")'">Add new partner</button>
+        <button class="button button2" onclick="location.href='@Url.Action("EditPartner")'">Edit Partner</button>
+    </div><br><br>
+
+    <h3>Products</h3>
+    <div>
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+            </tr>
+        </table><br>
+    </div>
+
+    <div class="productsAction">
+        <button class="button button2" onclick="location.href='@Url.Action("AddProduct")'">Add Product</button>
+        <button class="button button2" onclick="location.href='@Url.Action("EditProduct")'">Edit Product</button>
+    </div><br><br>
+
+</main>

@@ -1,0 +1,31 @@
+﻿<main>
+    <div class="container">
+        <!-- Generate BOM Page content here -->
+        <h2>Generate Bill of Materials</h2>
+        <form id="generateBOMForm" class="form">
+            <div class="form-group">
+                <label for="typeOfBuilding">Type of Building:</label>
+                <select id="typeOfBuilding" name="typeOfBuilding" class="form-control" required>
+                    <option value="industrial">Industrial</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredBuildingMaterial">Preferred Building Material:</label>
+                <select id="preferredBuildingMaterial" name="preferredBuildingMaterial" class="form-control" required>
+                    <option value="wood">Wood</option>
+                    <option value="concrete">Concrete</option>
+                    <option value="steel">Steel</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="buildingHeight">Height of Building (in Meters):</label>
+                <input type="number" id="buildingHeight" name="buildingHeight" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="buildingWidth">Width of Building (in Meters):</label>
+                <input type="number" id="buildingWidth" name="buildingWidth" class="form-control" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Generate BOM</button>
+        </form>
+    </div>
+</main>

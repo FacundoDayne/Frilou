@@ -1,0 +1,46 @@
+﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<main>
+    <h3>Edit Partner</h3>
+
+    <div>
+        <label>Partner Name:</label><br>
+        <input type="text" placeholder="Partner name" class="inputs" /><br>
+    </div><br>
+    <main class="inputGrid">
+
+        <div>
+            <label>Partnere code:</label><br>
+            <input type="text" class="inputs" placeholder="Partner code" /><br>
+        </div>
+
+        <div>
+            <label>Nature of Partnership:</label><br>
+            <select id="natureOfPartnership" class="inputs" placeholder="Nature Of Partnership">
+                <option value="a">Vendor</option>
+                <option value="b">Customer</option>
+                <option value="c">Other</option>
+            </select><br>
+        </div>
+
+        <div>
+            <label for="email">Email:</label><br>
+            <input type="email" class="inputs" id="email" name="email"><br>
+        </div>
+
+        <div>
+            <label for="myfile">Insert Image:</label><br>
+            <input type="file" class="inputs" id="myfile" name="myfile"><br>
+        </div>
+    </main><br>
+
+    <div class="description">
+        <label>Description:</label><br>
+        <textarea placeholder="Description"></textarea><br>
+    </div><br>
+
+
+    <button class="button button1">Discard Changes</button>
+    <button class="button button2">Apply Changes</button>
+
+</main>
