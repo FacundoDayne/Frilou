@@ -1,0 +1,21 @@
+﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<main>
+    <h3>Account Information</h3>
+
+    <div class="accountGrid">
+        <div class="cards">
+            <img class="placeholder" src="../../Images/placeholder.png" alt="logo"> <br>
+            <label>Name: </label><label class="FullName"> ----- </label> <br>
+            <label>Employee Code: </label><label class="EmployeeCode"> ----- </label> <br>
+            <label>Email: </label><label class="Email"> ----- </label> <br>
+        </div>
+
+        <div class="cards">
+            <label>Access Level: </label> <label class="AccessLevel"> ----- </label> <br>
+            <label>Description: </label><br>
+            <label class="Description"> ----- </label> <br><br><br><br>
+            <button class="button button2" onclick="location.href='@Url.Action("EditPartner")'">Edit Partner</button>
+        </div>
+    </div>
+</main>

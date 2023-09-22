@@ -15,14 +15,43 @@
             <div class="logos">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HomePage"><img src="../../Images/logoName.png" alt="logo"></a>
             </div>
-            <nav class="menu">
-                <ul class="list-unstyled mb-0">
-                    <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="GenerateBOM">Generate BOM</a></li>
-                    <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="BillOfMaterials">Bill of Materials</a></li>
-                    <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="MaterialCostEstimate">Material Cost Estimate</a></li>
-                    <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Account">Account</a></li>
-                </ul>
-            </nav>
+
+            @if (User == 1) //for admin
+            {
+                <nav class="menu">
+                    <ul class="list-unstyled mb-0">
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="GenerateBOM">Generate BOM</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="BillOfMaterials">Bill of Materials</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="MaterialCostEstimate">Material Cost Estimate</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Account">Account</a></li>
+                    </ul>
+                </nav>
+
+            }
+            else if (User == 2) // for partner/vendor
+            {
+                <nav class="menu">
+                    <ul class="list-unstyled mb-0">
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="GenerateBOM">Generate BOM</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="BillOfMaterials">Bill of Materials</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="MaterialCostEstimate">Material Cost Estimate</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Account2">Account</a></li>
+                    </ul>
+                </nav>
+            }
+            else //for employees
+            {
+                <nav class="menu">
+                    <ul class="list-unstyled mb-0">
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="GenerateBOM">Generate BOM</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="BillOfMaterials">Bill of Materials</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="MaterialCostEstimate">Material Cost Estimate</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Account3">Account</a></li>
+                    </ul>
+                </nav>
+            }
+
+
         </div>
     </header>
 

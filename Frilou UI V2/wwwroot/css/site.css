@@ -32,7 +32,7 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 5);
 }
 
 .logo {
@@ -224,4 +224,20 @@ th {
         .active-form {
             display: block;
         }
+
+.accountGrid {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    column-gap: 30px;
+    height: 100%;
+    width: 100%;
+}
+
+.placeholder {
+    width: 100px;
+    height: 100px;
+    align-content: center;
+    display: block;
+    margin: auto;
+}
 
