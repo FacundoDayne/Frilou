@@ -1,6 +1,19 @@
-﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+﻿@model AddEmployeeModel
 
-<main>
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<head>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
+
+		.validation-summary-valid {
+			display: none;
+		}
+	</style>
+
+</head>
+<body>
     <h3>Add Employee</h3>
 
     <div>
@@ -8,7 +21,96 @@
         <input type="text" placeholder="Full name" class="FullName" /><br>
     </div><br>
     <main class="inputGrid">
+		@using (Html.BeginForm("AddEmployee", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+		{
+			@Html.AntiForgeryToken()
 
+			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Username, "fuck", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Password, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Role, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.Role, new SelectList(Model.roles, "id", "name"), "Select User Role")
+					@Html.ValidationMessageFor(m => m.Role, "Choose a unit of measurment", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.FirstName, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.FirstName, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MiddleName, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.MiddleName, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.MiddleName, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.LastName, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.LastName, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Contact, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.Contact, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Contact, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.Email, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Email, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.Address, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Address, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.City, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.City, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<button class="button button1">Reset</button>
+			<input type="submit" value="Submit" class="button button2" />
+		}
+		<!--
         <div>
             <label>Employee code:</label><br>
             <input type="text" class="inputs" placeholder="Employee code" /><br>
@@ -53,15 +155,12 @@
             <input type="file" class="inputs" id="myfile" name="myfile"><br>
         </div>
 
-
+		-->
 
 
     </main><br>
 
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
 
-
-
-    <button class="button button1">Reset</button>
-    <button class="button button2">Submit</button>
-
-</main>
+</body>

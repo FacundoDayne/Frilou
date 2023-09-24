@@ -1,0 +1,12 @@
+﻿Notes:
+	HomePage.cshtml and Login.cshtml has conflicting purpose
+	Give Account.cshtml a proper homepage. Give the tables their own pages to reduce the need to keep loading data from database when it is not needed.
+	Does every view/page need to be located in the same directory?
+Changes:
+	Switched .net version from .net 6.0 to .net 7.0.
+	Added Add Employee button to Account.cshtml
+	Modified HomePage.cshtml, AddProduct.cshtml, AddEmployee.cshtml to use Html Helpers
+Additions:
+	Added login functionality
+	Added Add Materials functionality
+	Added add employee functionality
