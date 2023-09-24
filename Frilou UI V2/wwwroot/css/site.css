@@ -32,7 +32,7 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
-    background-color: rgba(0, 0, 0, 5);
+    background-color: black;
 }
 
 .logo {
@@ -64,8 +64,8 @@ body {
 
 main {
     flex: 1;
-    padding: 0px;
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds the maximum height */
+    padding-top: 10px;
+
 }
 
 footer {
@@ -183,7 +183,7 @@ th {
     color: black;
 }
 
-.partnersAction .productsAction {
+.partnersAction .productsAction .employeeAction{
     display: inline-flex;
 }
 

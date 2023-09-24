@@ -1,5 +1,21 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<main>
+    <h3>Account Information</h3>
+
+    <div class="accountGrid">
+        <div class="cards">
+            <img class="placeholder" src="../../Images/placeholder.png" alt="logo"> <br>
+            <label>Name: </label><label class="FullName"> ----- </label> <br>
+            <label>Partner Code: </label><label class="ParterCode"> ----- </label> <br>
+            <label>Email: </label><label class="Email"> ----- </label> <br>
+        </div>
+
+        <div class="cards">
+            <label>Nature of Partnership: </label> <label class="NatureOfPartnership"> ----- </label> <br>
+            <label>Description: </label><br>
+            <label class="Description"> ----- </label> <br><br><br><br>
+            <button class="button button2" onclick="location.href='@Url.Action("EditPartner")'">Edit Partner</button>
+        </div>
+    </div>
+</main>

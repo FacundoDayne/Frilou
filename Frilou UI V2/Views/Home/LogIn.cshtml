@@ -1,55 +1,23 @@
-﻿
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-<main>
-    <div class="container">
-        <div id="loginForm" class="active-form login-form">
-            <h2>Login</h2>
-            <form>
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter password">
-                </div>
-                <button type="submit" class="btn btn-primary btn-login">Login</button>
-            </form>
-            <button class="btn btn-link" onclick="toggleForm('registerForm')">Don't have an account? Register</button>
-        </div>
-
-        <div id="registerForm" class="register-form">
-            <h2>Register</h2>
-            <form>
-                <div class="form-group">
-                    <label for="registerName">Name</label>
-                    <input type="text" class="form-control" id="registerName" placeholder="Enter name">
-                </div>
-                <div class="form-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" class="form-control" id="registerEmail" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" class="form-control" id="registerPassword" placeholder="Enter password">
-                </div>
-                <button type="submit" class="btn btn-success btn-register">Register</button>
-            </form>
-            <button class="btn btn-link" onclick="toggleForm('loginForm')">Already have an account? Login</button>
-        </div>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="navbar">
+        <h1>Frilou Construction</h1>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function toggleForm(formId) {
-            document.getElementById('loginForm').classList.toggle('active-form');
-            document.getElementById('registerForm').classList.toggle('active-form');
-        }
-    </script>
-
-</main>
-
-
+    <div class="login-container">
+        <h2>Welcome back</h2>
+        <form action="#" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+</html>
 

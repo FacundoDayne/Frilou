@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="bg-dark text-white py-3">
+    <header class="bg-black text-white py-3">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logos">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HomePage"><img src="../../Images/logoName.png" alt="logo"></a>
             </div>
 
-            @if (User == 1) //for admin
+            @if (true) //for admin
             {
                 <nav class="menu">
                     <ul class="list-unstyled mb-0">
@@ -28,7 +28,7 @@
                 </nav>
 
             }
-            else if (User == 2) // for partner/vendor
+            else if (false) // for partner/vendor
             {
                 <nav class="menu">
                     <ul class="list-unstyled mb-0">
