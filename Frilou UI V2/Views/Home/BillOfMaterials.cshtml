@@ -1,64 +1,30 @@
-﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+﻿@model BOMProjectsList
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 <main>
     <h3>Bill of Materials</h3>
 
     <div class="bomGrid">
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
-
-        <div class="cards">
-            <label>Project ID: </label> <label class="Project ID"> ----- </label> <br>
-            <label>Date Submitted: </label> <label class="Date Submitted"> ----- </label> <br>
-            <label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>
-        </div>
+		@using (Html.BeginForm("BillOfMaterials", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+		{
+			
+		}
+		@foreach(BOMProjectsListItem item in Model.projects)
+		{
+			<div class="cards">
+				<label>Project Title: @item.title</label> <label class="Project ID"></label> <br>
+				<label>Project ID: @item.id.ToString()</label> <label class="Project ID"></label> <br>
+				<label>Project Date: @item.date.ToString("dd-MM-yyyy")</label> <label class="Date Submitted"></label> <br>
+				<!--<label>Project Cost: </label> <label class="Project Cost"> ----- </label> <br>-->
+				<p>@Html.ActionLink("Edit", "BOMView", new { id = item.id })||</p>
+				<!--<p><a asp-action="MaterialCostEstimate" asp>Edit</a> || <a asp-action="MaterialCostEstimate">Create MCE</a></p>-->
+				
+			</div>
+		}
     </div>
-
+	<!--
     <button class="button button3">Edit BOM</button>
     <button class="button button3">Generate MCE</button>
+	-->
 </main>

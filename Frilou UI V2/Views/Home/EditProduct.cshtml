@@ -1,9 +1,132 @@
-﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+﻿@model MaterialsEditModel
 
-<main>
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<head>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
+
+		.validation-summary-valid {
+			display: none;
+		}
+	</style>
+</head>
+<body>
     <h3>Edit Product</h3>
     <main class="inputGrid">
-        <div>
+
+		@using (Html.BeginForm("EditProduct", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+		{
+			@Html.AntiForgeryToken()
+
+			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+			<button asp-action="MaterialsList">List of Materials</button>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.ID, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.ID, new { @class = "form-control", @readonly="true" })
+					@Html.ValidationMessageFor(m => m.ID, "fuck", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<button asp-action="MaterialsList">Find ID</button>
+			
+			<div class="form-group">
+				@Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Description, "fuck", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.LongDescription, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextAreaFor(m => m.LongDescription, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.LongDescription, "shit", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.MeasurementUnit, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.MeasurementUnit, new SelectList(Model.measurements, "Id", "description"), "Select a Measurement Unit")
+					@Html.ValidationMessageFor(m => m.MeasurementUnit, "Choose a unit of measurment", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Category, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.Category, new SelectList(Model.categories, "Id", "description"), "Select a category")
+					@Html.ValidationMessageFor(m => m.Category, "Choose a category", new { @class = "text-danger"})
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Manufacturer, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.Manufacturer, new SelectList(Model.manufacturers, "Id", "description"), "Select a Manufacturer")
+					@Html.ValidationMessageFor(m => m.Manufacturer, "Choose a manufacturer", new { @class = "text-danger"})
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Price, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Price, "Must be a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Length, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Length, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Length, "Must be a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Width, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Width, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Width, "Must be a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Height, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Height, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Height, "Must be a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Weight, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Weight, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Weight, "Must be a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Volume, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Volume, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Volume, "Must be a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<button class="button button1">Reset</button>
+			<input type="submit" value="Submit" class="button button2" />
+		}
+
+        <!--<div>
             <label>Product:</label><br>
             <input type="text" class="inputs" placeholder="Product" /><br>
         </div>
@@ -21,16 +144,19 @@
         <div>
             <label>Dimensions:</label><br>
             <input type="text" class="inputs" placeholder="Dimensions" /><br>
-        </div>
+		</div>-->
     </main><br>
-
+	<!--
     <div class="description">
         <label>Description:</label><br>
         <textarea placeholder="Description"></textarea><br>
     </div><br>
 
-
     <button class="button button1">Discard Changes</button>
-    <button class="button button2">Apply Changes</button>
+	<button class="button button2">Apply Changes</
+	-->
 
-</main>
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+
+</body>

@@ -1,0 +1,4 @@
+﻿Changes:
+	Modified EditProduct.cshtml to use Html Helpers
+Additions:
+	Added partial Materials Edit functionality

@@ -1,8 +1,21 @@
-﻿<main>
+﻿@model GenerateBOMModel
+<head>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
+
+		.validation-summary-valid {
+			display: none;
+		}
+	</style>
+</head>
+<body>
     <div class="container">
         <!-- Generate BOM Page content here -->
         <h2>Generate Bill of Materials</h2>
-        <form id="generateBOMForm" class="form">
+        <!--
+		<form id="generateBOMForm" class="form">
             <div class="form-group">
                 <label for="typeOfBuilding">Type of Building:</label>
                 <select id="typeOfBuilding" name="typeOfBuilding" class="form-control" required>
@@ -27,5 +40,56 @@
             </div>
             <button class="btn btn-primary" type="submit">Generate BOM</button>
         </form>
-    </div>
-</main>
+		-->
+		@using (Html.BeginForm("GenerateBOM", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+		{
+			@Html.AntiForgeryToken()
+
+			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.BuildingMaterial, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.BuildingMaterial, new SelectList(Model.MaterialsList, "Id", "description"), "Select a Material")
+					@Html.ValidationMessageFor(m => m.BuildingMaterial, "Choose a building material", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.NumberOfStoreys, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.NumberOfStoreys, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.NumberOfStoreys, "Enter a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.FloorHeight, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.FloorHeight, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.FloorHeight, "Enter a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.BuildingLength, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.BuildingLength, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.BuildingLength, "Enter a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.BuildingWidth, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.BuildingWidth, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.BuildingWidth, "Enter a number", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<input type="submit" value="Submit" class="button button2" />
+		}
+	</div>
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+</body>
