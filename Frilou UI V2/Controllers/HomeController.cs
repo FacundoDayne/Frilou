@@ -84,6 +84,11 @@ namespace Frilou_UI_V2.Controllers
             return View();
         }
 
+        public IActionResult Formula()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

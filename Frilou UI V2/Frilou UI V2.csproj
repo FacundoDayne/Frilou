@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Frilou_UI_V2</RootNamespace>
@@ -15,6 +15,10 @@
     <None Include="wwwroot\Images\logo with name.png" />
     <None Include="wwwroot\Images\logo.png" />
     <None Include="wwwroot\Images\logos.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.4" />
   </ItemGroup>
 
 </Project>
