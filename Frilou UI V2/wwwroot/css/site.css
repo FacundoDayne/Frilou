@@ -56,9 +56,13 @@ body {
     transition: 0.3s ease-in-out;
 }
 
-    .menu a:hover {
-        color: #ff7200;
-    }
+.menu a:hover {
+    color: #147502;
+}
+
+ul li.active a {
+    color: #73d419;
+}
 
 
 
