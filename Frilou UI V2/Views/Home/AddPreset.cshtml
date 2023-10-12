@@ -1,11 +1,35 @@
-﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+﻿@model FormulaModel 
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 <main>
-    <h3>Add Preset</h3>
+    <h3>Add Preset</h3><br>
 
-    <div>
-        <label>Preset Name: </label> <input type="text" class="inputs" id="PresetName" name="PresetName"><br>
-    </div> <br>
+
+    <div class:"inputGrid">
+        <div>
+            <label>Template Name:</label><br>
+            @Html.TextBoxFor(m=>m.TemplateName, new { @class="form-control"})<br>
+
+            <label>Template ID:</label><br>
+            @Html.TextBoxFor(m=>m.TemplateID, new { @class="form-control"})<br>
+
+            <label>Description:</label><br>
+            @Html.TextAreaFor(m=>m.TemplateDescription, new { @class="form-control"})<br>
+        </div>
+
+        <div>
+            <label>Height of Storeys:</label><br>
+            @Html.TextBoxFor(m=>m.HeightOfStoreys, new { @class="form-control"})<br>
+
+            <label>Lenght of Building:</label><br>
+            @Html.TextBoxFor(m=>m.LengthOfBuilding, new { @class="form-control"})<br>
+
+            <label>Width of Building:</label><br>
+            @Html.TextBoxFor(m=>m.WidthOfBuilding, new { @class="form-control"})<br>
+        </div>
+
+    </div>
 
     <h4>Materials</h4>
     <div>
@@ -29,6 +53,75 @@
             </tr>
         </table><br>
     </div>
+
+    <h4>Formulas</h4>
+    <div class="form-group">
+        <table>
+            <tr>
+                <th>Variable</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Floor Thickness</td>
+                <td>@Html.TextBoxFor(m=>m.floorThickness, new { @class="form-control"})</td>
+            <tr>
+                <td>Rebar Percentage</td>
+                <td>@Html.TextBoxFor(m=>m.rebarPercentage, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Nail Interval</td>
+                <td>@Html.TextBoxFor(m=>m.nailInterval, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Hollowblock Constant</td>
+                <td>@Html.TextBoxFor(m=>m.hollowBlockConstant, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Support Beam Length</td>
+                <td>@Html.TextBoxFor(m=>m.supportBeamLength, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Support Beam Width</td>
+                <td>@Html.TextBoxFor(m=>m.supportBeamWidth, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Support beam Interval</td>
+                <td>@Html.TextBoxFor(m=>m.supportBeamWidth, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Concrete ratio Cement</td>
+                <td>@Html.TextBoxFor(m=>m.concreteRatioCement, new { @class="form-control"})</td>
+            <tr>
+                <td>Concrete Ratio Sand</td>
+                <td>@Html.TextBoxFor(m=>m.concreteRatioSand, new { @class="form-control"})</td>
+            <tr>
+                <td>Concrete Ratio Agggregate</td>
+                <td>@Html.TextBoxFor(m=>m.concreteRatioAggregate, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Riser Height</td>
+                <td>@Html.TextBoxFor(m=>m.riserHeight, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Thread Depth</td>
+                <td>@Html.TextBoxFor(m=>m.threadDepth, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Stairs Width</td>
+                <td>@Html.TextBoxFor(m=>m.stairsWidth, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Wastage</td>
+                <td>@Html.TextBoxFor(m=>m.wastage, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Provisions</td>
+                <td>@Html.TextBoxFor(m=>m.provisions, new { @class="form-control"})</td>
+            </tr>
+            </tr>
+        </table>
+    </div>
+    <br>
 
     <button class="button button1">Reset</button>
     <button class="button button2">Submit</button>

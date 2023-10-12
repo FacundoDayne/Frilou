@@ -104,6 +104,26 @@ namespace Frilou_UI_V2.Controllers
             return View();
         }
 
+        public IActionResult AddClient()
+        {
+            return View();
+        }
+
+        public IActionResult EditClient()
+        {
+            return View();
+        }
+
+        public IActionResult AddProject()
+        {
+            return View();
+        }
+
+        public IActionResult EditProject()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

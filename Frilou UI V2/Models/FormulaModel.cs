@@ -54,6 +54,34 @@ namespace Frilou_UI_V2.Models
         [Display(Name = "provisions")]
         public string provisions { get; set; }
 
+
+        [Required]
+        [Display(Name = "TemplateName")]
+        public string TemplateName { get; set; }
+
+        [Required]
+        [Display(Name = "TemplateDescription")]
+        public string TemplateDescription { get; set; }
+
+        [Required]
+        [Display(Name = "TemplateID")]
+        public string TemplateID { get; set; }
+
+        [Required]
+        [Display(Name = "HeightOfStoreys")]
+        public string HeightOfStoreys { get; set; }
+
+        [Required]
+        [Display(Name = "LengthOfBuilding")]
+        public string LengthOfBuilding { get; set; }
+
+        [Required]
+        [Display(Name = "WidthOfBuilding")]
+        public string WidthOfBuilding { get; set; }
+
+        [Required]
+        [Display(Name = "Materials")]
+        public string Materials { get; set; }
     }
 
 
