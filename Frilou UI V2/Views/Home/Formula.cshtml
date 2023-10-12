@@ -1,13 +1,8 @@
-﻿@*
-
-@using Microsoft.AspNetCore.Html
-@using System.Web.Mvc.Html
+﻿@model FormulaModel
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-<main>
+<body>
     <h3>Formulas</h3>
     <div class="form-group">
-        @using ()
         <table>
             <tr>
                 <th>Variable</th>
@@ -15,73 +10,68 @@
             </tr>
             <tr>
                 <td>Floor Thickness</td>
-                <td>@Html.TextBoxFor(m=>m.floorThickness, new { class="form-control"})</td>
-            </tr>
+                <td>@Html.TextBoxFor(m=>m.floorThickness, new { @class="form-control"})</td>
             <tr>
-                <td>Wall Thickness</td>
-                <td>@Html.TextBoxFor(m=>m.wallThickness, new { class="form-control"})</td>
-            </tr>
-            <tr>
-                <td>Rebar Thickness</td>
-                <td>@Html.TextBoxFor(m=>m.wallThickness, new { class="form-control"})</td>
+                <td>Rebar Percentage</td>
+                <td>@Html.TextBoxFor(m=>m.rebarPercentage, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Nail Interval</td>
-                <td>@Html.TextBoxFor(m=>m.nailInterval, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.nailInterval, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Hollowblock Constant</td>
-                <td>@Html.TextBoxFor(m=>m.nailInterval, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.hollowBlockConstant, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Support Beam Length</td>
-                <td>@Html.TextBoxFor(m=>m.supportBeamLength, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.supportBeamLength, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Support Beam Width</td>
-                <td>@Html.TextBoxFor(m=>m.supportBeamWidth, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.supportBeamWidth, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Support beam Interval</td>
-                <td>@Html.TextBoxFor(m=>m.supportBeamWidth, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.supportBeamWidth, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Concrete ratio Cement</td>
-                <td>@Html.TextBoxFor(m=>m.concreteRatioCement, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.concreteRatioCement, new { @class="form-control"})</td>
             <tr>
                 <td>Concrete Ratio Sand</td>
-                <td>@Html.TextBoxFor(m=>m.concreteRatioSand, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.concreteRatioSand, new { @class="form-control"})</td>
             <tr>
                 <td>Concrete Ratio Agggregate</td>
-                <td>@Html.TextBoxFor(m=>m.concreteRatioAggregate, new { class="form-control"})</td>
-            </tr>
-            <tr>
-                <td>Plywod Length</td>
-                <td>@Html.TextBoxFor(m=>m.plywoodLength, new { class="form-control"})</td>
-            </tr>
-            <tr>
-                <td>Plywood Width</td>
-                <td>@Html.TextBoxFor(m=>m.plywoodWidth, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.concreteRatioAggregate, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Riser Height</td>
-                <td>@Html.TextBoxFor(m=>m.riserHeigh, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.riserHeight, new { @class="form-control"})</td>
             </tr>
             <tr>
                 <td>Thread Depth</td>
-                <td>@Html.TextBoxFor(m=>m.threadDepth, new { class="form-control"})</td>
+                <td>@Html.TextBoxFor(m=>m.threadDepth, new { @class="form-control"})</td>
             </tr>
             <tr>
-                <td>Overorder</td>
-                <td>@Html.TextBoxFor(m=>m.overorder, new { class="form-control"})</td>
+                <td>Stairs Width</td>
+                <td>@Html.TextBoxFor(m=>m.stairsWidth, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Wastage</td>
+                <td>@Html.TextBoxFor(m=>m.wastage, new { @class="form-control"})</td>
+            </tr>
+            <tr>
+                <td>Provisions</td>
+                <td>@Html.TextBoxFor(m=>m.provisions, new { @class="form-control"})</td>
+            </tr>
             </tr>
         </table>
-    </div><br>
+    </div>
+    <br>
 
 
     <button class="button button1">Discard Changes</button>
     <button class="button button2">Apply Changes</button>
 
-</main>
-
-*@
+</body>

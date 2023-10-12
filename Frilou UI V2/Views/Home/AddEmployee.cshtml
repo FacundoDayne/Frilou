@@ -1,65 +1,62 @@
 ﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 <main>
-    <h3>Add Employee</h3>
+    <h3>Add Contractor</h3>
 
     <div>
-        <label>Full name:</label><br>
-        <input type="text" placeholder="Full name" class="FullName" /><br>
+        <label>Contractor code:</label><br>
+        <input type="text" class="inputs" placeholder="Employee code" />
     </div><br>
-    <main class="inputGrid">
+
+
+    <div class="inputGrid">
 
         <div>
-            <label>Employee code:</label><br>
-            <input type="text" class="inputs" placeholder="Employee code" /><br>
-        </div>
+            <label>Full name:</label><br>
+            <input type="text" class="inputs" placeholder="Full name" id="FullName" /><br>
 
-        <div>
-            <label>Access level:</label><br>
-            <input type="text" class="inputs" placeholder="Access level" /><br>
-        </div>
 
-        <div>
+            <label>Date of Birth:</label><br>
+            <input type="date" class="inputs" id="birthdate" name="birthdate" /><br>
+
+            <label>Date of Employment:</label><br>
+            <input type="date" class="inputs" id="EmploymentDate" name="EmploymentDate" /><br>
+
+            <label>Employee level:</label><br>
+            <input type="text" class="inputs" id="EmployeeLevel" name="EmployeeLevel" placeholder="Employee level" /><br>
+
             <label>Username:</label><br>
             <input type="text" class="inputs" placeholder="Username" /><br>
-        </div>
 
-        <div>
             <label>Password:</label><br>
             <input type="text" class="inputs" placeholder="Password" /><br>
-        </div>
 
-        <div>
-            <label>Birthday:</label><br>
-            <input type="date" id="birthday" class="inputs" name="birthday"><br>
-        </div>
-
-        <div>
-            <label>Gender:</label><br>
-            <select id="gender" class="inputs" placeholder="Gender">
-                <option value="a">Male</option>
-                <option value="b">Female</option>
-                <option value="c">Other</option>
-            </select><br>
-        </div>
-
-        <div>
             <label for="email">Email:</label><br>
-            <input type="email" class="inputs" id="email" name="email"><br>
+            <input type="email" class="inputs" id="email" name="email" placeholder="email"><br>
+
         </div>
 
         <div>
+            <label>Lot Number:</label><br>
+            <input type="text" class="inputs" id="LotNumber" name="LotNumber" placeholder="Lot Number" /><br>
+
+            <label>Street:</label><br>
+            <input type="text" class="inputs" id="Street" name="Street" placeholder="Street" /><br>
+
+            <label>Branagay:</label><br>
+            <input type="text" class="inputs" id="Branagay" name="Branagay" placeholder="Branagay" /><br>
+
+            <label>City:</label><br>
+            <input type="text" class="inputs" id="City" name="City" placeholder="City" /><br>
+
+            <label>Region:</label><br>
+            <input type="text" class="inputs" id="Region" name="Region" placeholder="Region" /><br>
+
             <label for="myfile">Insert Image:</label><br>
             <input type="file" class="inputs" id="myfile" name="myfile"><br>
         </div>
 
-
-
-
-    </main><br>
-
-
-
+    </div><br>
 
     <button class="button button1">Reset</button>
     <button class="button button2">Submit</button>

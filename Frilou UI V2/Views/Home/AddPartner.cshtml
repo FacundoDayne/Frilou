@@ -4,39 +4,53 @@
     <h3>Add Partner</h3>
 
     <div>
-        <label>Partner Name:</label><br>
-        <input type="text" placeholder="Partner name" class="inputs" /><br>
+        <label>Partner Code:</label><br>
+        <input type="text" id="PartnerCode" name="PartnerCode" placeholder="Partner Code" class="inputs" /><br>
     </div><br>
-    <main class="inputGrid">
+
+    <div class="inputGrid">
 
         <div>
-            <label>Partnere code:</label><br>
-            <input type="text" class="inputs" placeholder="Partner code" /><br>
-        </div>
+            <label>Business Name:</label><br>
+            <input type="text" class="inputs" placeholder="Full name" id="FullName" /><br>
 
-        <div>
-            <label>Nature of Partnership:</label><br>
-            <select id="natureOfPartnership" class="inputs" placeholder="Nature Of Partnership">
-                <option value="a">Vendor</option>
-                <option value="b">Customer</option>
-                <option value="c">Other</option>
-            </select><br>
-        </div>
+            <label>Contact Number:</label><br>
+            <input type="text" class="inputs" placeholder="Contact Number" id="ContactNo" /><br>
 
-        <div>
+            <label>Username:</label><br>
+            <input type="text" class="inputs" placeholder="Username" /><br>
+
+            <label>Password:</label><br>
+            <input type="text" class="inputs" placeholder="Password" /><br>
+
             <label for="email">Email:</label><br>
-            <input type="email" class="inputs" id="email" name="email"><br>
+            <input type="email" class="inputs" id="email" name="email" placeholder="Email"><br>
+
+            <label>Description:</label><br>
+            <textarea placeholder="Description"></textarea><br>
+
         </div>
 
         <div>
+            <label>Lot Number:</label><br>
+            <input type="text" class="inputs" id="LotNumber" name="LotNumber" placeholder="Lot Number" /><br>
+
+            <label>Street:</label><br>
+            <input type="text" class="inputs" id="Street" name="Street" placeholder="Street" /><br>
+
+            <label>Branagay:</label><br>
+            <input type="text" class="inputs" id="Branagay" name="Branagay" placeholder="Branagay" /><br>
+
+            <label>City:</label><br>
+            <input type="text" class="inputs" id="City" name="City" placeholder="City" /><br>
+
+            <label>Region:</label><br>
+            <input type="text" class="inputs" id="Region" name="Region" placeholder="Region" /><br>
+
             <label for="myfile">Insert Image:</label><br>
             <input type="file" class="inputs" id="myfile" name="myfile"><br>
         </div>
-    </main><br>
 
-    <div class="description">
-        <label>Description:</label><br>
-        <textarea placeholder="Description"></textarea><br>
     </div><br>
 
 
