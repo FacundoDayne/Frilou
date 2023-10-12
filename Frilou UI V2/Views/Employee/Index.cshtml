@@ -1,0 +1,29 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model EmployeeDashboardModel
+<head></head>
+
+<body>
+	<div style="width:100%;height:80%;border-color:black;">
+		<h2>New Projects</h2>
+		@if (Model.projects != null || Model.projects.Count != 0)
+		{
+			foreach (EmployeeNewProject x in Model.projects)
+			{
+				<div class="cards">
+					<p>Title: @x.Title</p>
+					<p>Client: @x.ClientName</p>
+					<p>Date: @x.Date.ToString("yyyy-MM-dd")</p>
+					@Html.ActionLink("Create BOM", "BOMGenerate", "Employee", new {id = x.ID} )
+				</div>
+			}
+		} else if (Model.projects.Count == 0)
+		{
+			<p>No new projects</p>
+		}
+	</div>
+	<button style="" class="button button1" onclick="location.href='@Url.Action("Templates")'">Templates</button>
+</body>

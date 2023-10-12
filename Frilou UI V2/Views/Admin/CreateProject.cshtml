@@ -1,0 +1,256 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model ProjectModel
+<head>
+	<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN"></script>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
+
+		.validation-summary-valid {
+			display: none;
+		}
+		table {
+			width: 100%; /* Set the table width to 100% of the container */
+		}
+
+			table td {
+				padding: 5px;
+			}
+
+		td.column2 {
+			width: 50%; /* Set the second column to occupy 50% of the table's width */
+			vertical-align: top; /* Align content to the top of the cell */
+		}
+
+		#map {
+			height: 100%; /* Fit the image to the height of the four rows */
+			width: 100%; /* Fit the image to the width of its container */
+		}
+
+		.datepicker {
+			display: inline-block;
+		}
+	</style>
+</head>
+
+<body>
+
+	@using (Html.BeginForm("CreateProject", "Admin", FormMethod.Post))
+	{
+		@Html.AntiForgeryToken()
+
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		<div style="display: none">;
+			@Html.EditorFor(m=>m.BuildingList);
+			@for (int x = 0; x < Model.BuildingList.Count; x++)
+			{
+				@Html.EditorFor(m=>m.BuildingList[x])
+				@Html.EditorFor(m=>m.BuildingList[x].ID)
+				@Html.EditorFor(m=>m.BuildingList[x].Description)
+			}
+			@Html.EditorFor(m=>m.EngineerList);
+			@for (int x = 0; x < Model.EngineerList.Count; x++)
+			{
+				@Html.EditorFor(m=>m.EngineerList[x])
+				@Html.EditorFor(m=>m.EngineerList[x].ID)
+				@Html.EditorFor(m=>m.EngineerList[x].Description)
+			}
+		</div>
+
+		<div>
+			@Html.LabelFor(m=>m.Title, new { @class = "col-md-2 control-label" })
+			<div>
+				@Html.TextAreaFor(m=>m.Title, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m=>m.Title, "Enter project title", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div>
+			@Html.LabelFor(m=>m.ClientName, new { @class = "col-md-2 control-label" })
+			<div>
+				@Html.TextAreaFor(m=>m.ClientName, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m=>m.ClientName, "Enter client name", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div>
+			@Html.LabelFor(m=>m.ClientContact, new { @class = "col-md-2 control-label" })
+			<div>
+				@Html.TextAreaFor(m=>m.ClientContact, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m=>m.ClientContact, "Enter client contacts", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div>
+			@Html.LabelFor(m=>m.Date, new { @class = "col-md-2 control-label" })
+			<div>
+				@Html.EditorFor(m=>m.Date, new { htmlAttributes = new { @class = "datepicker" } })
+				@Html.ValidationMessageFor(m=>m.Date, "Enter client contacts", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<br />
+		<!--<div class="map" id="myMap" style="position:relative;width:100%;height:600px;"> -->
+		<table>
+			<tr>
+				<td>
+					<div>
+						@Html.LabelFor(m=>m.Address, new { @class = "control-label" })
+						<div>
+							@Html.TextBoxFor(m=>m.Address, new { @class = "form-control", @id="address"  })
+							@Html.ValidationMessageFor(m=>m.Address, "Enter project address", new { @class = "text-danger" })
+						</div>
+					</div>
+				</td>
+				<td class="column2" rowspan="4">
+					<!-- Use rowspan to make this cell span 4 rows -->
+					<div class="map" id="myMap" style="position:relative;width:100%;height:600px;">
+					@Html.HiddenFor(m=>m.Latitude, new { @class = "form-control", @id="latitude"})
+					@Html.HiddenFor(m=>m.Longtitude, new { @class = "form-control", @id="longtitude" })
+					@Html.ValidationMessageFor(m=>m.Latitude, "Select from map", new { @class = "text-danger" })
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div>
+						@Html.LabelFor(m=>m.City, new { @class = "control-label" })
+						<div>
+							@Html.TextBoxFor(m=>m.City, new { @class = "form-control", @id="city"  })
+							@Html.ValidationMessageFor(m=>m.City, "Enter project City", new { @class = "text-danger" })
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div>
+						@Html.LabelFor(m=>m.Region, new { @class = "control-label" })
+						<div>
+							@Html.TextBoxFor(m=>m.Region, new { @class = "form-control" , @id="AdminDistrict" })
+							@Html.ValidationMessageFor(m=>m.Region, "Enter project Region", new { @class = "text-danger" })
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div>
+						@Html.LabelFor(m=>m.Country, new { @class = "control-label" })
+						<div>
+							@Html.TextBoxFor(m=>m.Country, new { @class = "form-control", @id="Country" })
+							@Html.ValidationMessageFor(m=>m.Country, "Enter project Country", new { @class = "text-danger" })
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<br />
+
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.EngineerID, new { @class = "control-label" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(m => m.EngineerID, new SelectList(Model.EngineerList, "ID", "Description"), "Select a category")
+				@Html.ValidationMessageFor(m => m.EngineerID, "Choose an engineer", new { @class = "text-danger"})
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.BuildingID, new { @class = "control-label" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(m => m.BuildingID, new SelectList(Model.BuildingList, "ID", "Description"), "Select a category")
+				@Html.ValidationMessageFor(m => m.BuildingID, "Choose building type", new { @class = "text-danger"})
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.NumberOfStoreys, new { @class = "col-md-2 control-label" })
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.NumberOfStoreys, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m => m.NumberOfStoreys, "Enter a number", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.FloorHeight, new { @class = "col-md-2 control-label" })
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.FloorHeight, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m => m.FloorHeight, "Enter a number", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.BuildingLength, new { @class = "col-md-2 control-label" })
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.BuildingLength, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m => m.BuildingLength, "Enter a number", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.BuildingWidth, new { @class = "col-md-2 control-label" })
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.BuildingWidth, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m => m.BuildingWidth, "Enter a number", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<input type="submit" value="Submit" class="button button2" />
+	}
+	<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+	<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		$(function () {
+			$(".datepicker").datepicker();
+		});
+		function loadMapScenario() {
+			var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+				credentials: 'ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN',
+				center: new Microsoft.Maps.Location(14.552120, 121.056068), // Initial location (latitude, longitude)
+				zoom: 12 // Initial zoom level
+
+			});
+			Microsoft.Maps.Events.addHandler(map, 'click', function (e) {
+				var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+				var location = e.target.tryPixelToLocation(point);
+				reverseGeocode(location);
+			});
+			function reverseGeocode(location) {
+				var apiUrl = `https://dev.virtualearth.net/REST/v1/Locations/${location.latitude},${location.longitude}?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN`;
+
+				fetch(apiUrl)
+					.then(response => response.json())
+					.then(data => {
+						if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+							var address = data.resourceSets[0].resources[0].address.formattedAddress;
+
+							document.getElementById('address').value = data.resourceSets[0].resources[0].address.addressLine;
+							document.getElementById('city').value = data.resourceSets[0].resources[0].address.locality;
+							document.getElementById('AdminDistrict').value = data.resourceSets[0].resources[0].address.adminDistrict;
+							document.getElementById('Country').value = data.resourceSets[0].resources[0].address.countryRegion;
+							document.getElementById('longtitude').value = location.longitude;
+							document.getElementById('latitude').value = location.latitude;
+
+							map.entities.removeAt(0);
+							var pushpin = new Microsoft.Maps.Pushpin(location);
+							map.entities.push(pushpin);
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+		}
+		const body = document.querySelector('body');
+		body.onload = loadMapScenario;
+	</script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+</body>

@@ -118,14 +118,17 @@ namespace Frilou_UI_V2.Models
 	public class SupplierMaterialViewItems
 	{
 		public bool IsAvailable { get; set; }
+		public bool PreviousIsAvailable { get; set; }
 
 		public uint ID { get; set; }
+		public uint MaterialID { get; set; }
 
 		public string Description_Long { get; set; }
 		public string MeasurementString { get; set; }
 		public string MeasurementValue { get; set; }
 
 		public double Price { get; set; }
+		public double PreviousPrice { get; set; }
 
 	}
 

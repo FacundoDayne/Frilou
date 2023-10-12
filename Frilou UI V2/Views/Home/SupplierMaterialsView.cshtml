@@ -36,10 +36,16 @@
 				</tr>
 				@for (int i = 0; i < Model.Count; i++)
 				{
-					@Html.HiddenFor(m=>m[i].Description_Long)
-					@Html.HiddenFor(m=>m[i].MeasurementString)
-					@Html.HiddenFor(m=>m[i].MeasurementValue)
-					@Html.HiddenFor(m=>m[i].ID)
+					<div style="display: none">
+						@Html.HiddenFor(m=>m[i])
+						@Html.HiddenFor(m=>m[i].Description_Long)
+						@Html.HiddenFor(m=>m[i].MeasurementString)
+						@Html.HiddenFor(m=>m[i].MeasurementValue)
+						@Html.HiddenFor(m=>m[i].PreviousPrice)
+						@Html.HiddenFor(m=>m[i].PreviousIsAvailable)
+						@Html.HiddenFor(m=>m[i].ID)
+						@Html.HiddenFor(m=>m[i].MaterialID)
+					</div>
 					<tr>
 						<td>@Html.CheckBoxFor(m=>m[i].IsAvailable)</td>
 						<td>@Model[i].Description_Long</td>

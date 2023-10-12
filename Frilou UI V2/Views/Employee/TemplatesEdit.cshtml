@@ -1,0 +1,173 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model EditTemplateModel
+<head>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
+
+		.validation-summary-valid {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	@using (Html.BeginForm("TemplatesEdit", "Employee", FormMethod.Post))
+	{
+		@Html.AntiForgeryToken()
+
+		<h2>Template Name</h2>
+		<div>
+			@Html.LabelFor(m=>m.Descritpion, new { @class = "col-md-2 control-label" })
+			<div>
+				@Html.TextAreaFor(m=>m.Descritpion, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m=>m.Descritpion, "Enter project title", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div>
+			@Html.LabelFor(m=>m.Long_Description, new { @class = "col-md-2 control-label" })
+			<div>
+				@Html.TextAreaFor(m=>m.Long_Description, new { @class = "form-control" })
+				@Html.ValidationMessageFor(m=>m.Long_Description, "Enter project title", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<h2>Template Formula Constants</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>Variable Name</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>@Html.LabelFor(m=>m.floorThickness, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.floorThickness, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.floorThickness, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.wallThickness, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.wallThickness, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.wallThickness, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.rebarDiameter, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.rebarDiameter, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.rebarDiameter, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.nailConstant, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.nailConstant, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.nailConstant, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.hollowBlockConstant, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.hollowBlockConstant, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.hollowBlockConstant, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.supportBeamLength, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.supportBeamLength, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.supportBeamLength, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.supportBeamWidth, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.supportBeamWidth, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.supportBeamWidth, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.supportBeamSpace, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.supportBeamSpace, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.supportBeamSpace, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.concreteRatioCement, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.concreteRatioCement, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.concreteRatioCement, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.concreteRatioSand, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.concreteRatioSand, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.concreteRatioSand, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.concreteRatioAggregate, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.concreteRatioAggregate, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.concreteRatioAggregate, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.plywoodLength, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.plywoodLength, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.plywoodLength, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.plywoodWidth, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.plywoodWidth, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.plywoodWidth, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.riserHeight, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.riserHeight, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.riserHeight, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.threadDepth, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.threadDepth, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.threadDepth, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.wasteage, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.wasteage, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.wasteage, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>@Html.LabelFor(m=>m.provisions, new { @class = "col-md-2 control-label" })</td>
+					<td>
+						@Html.TextAreaFor(m=>m.provisions, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.provisions, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="submit" value="Submit" class="button button2" />
+	}
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+</body>

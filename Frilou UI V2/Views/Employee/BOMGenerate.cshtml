@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model EmployeeBOMModel
+<head>
+	<script>
+			.field - validation - valid {
+			display: none;
+		}
+
+			.validation - summary - valid {
+			display: none;
+		}
+	</script>
+</head>
+
+<body>
+	<div style="border-color:black;">
+	<p>Project Title: @Model.Title</p>
+	<p>Project Client: @Model.ClientName</p>
+	<p>Project Client Contacts: @Model.ClientContact</p>
+	<p>Project Date: @Model.Date</p>
+	<p>Project Address: <span>@Model.Address</span>,<span>@Model.City</span>,<span>@Model.Region</span>,<span>@Model.Country</span></p>
+	<p>Building Type: @Model.BuildingType</p>
+	<p>Number of Storeys: @Model.NumberOfStoreys</p>
+	<p>Floor height: @Model.FloorHeight</p>
+	<p>Building Length: @Model.BuildingLength</p>
+	<p>Building Width: @Model.BuildingWidth</p>
+	</div>
+	@using (Html.BeginForm("BOMGenerate", "Employee", FormMethod.Post))
+	{
+
+		<div style="display: none">
+			@Html.EditorFor(m=>m.templates)
+			@for (int x = 0; x < Model.templates.Count; x++)
+			{
+				@Html.EditorFor(m=>m.templates[x])
+				@Html.EditorFor(m=>m.templates[x].ID)
+				@Html.EditorFor(m=>m.templates[x].Description)
+			}
+			@Html.EditorFor(m=>m.Title)
+			@Html.EditorFor(m=>m.ClientName)
+			@Html.EditorFor(m=>m.ClientContact)
+			@Html.EditorFor(m=>m.Date)
+			@Html.EditorFor(m=>m.Address)
+			@Html.EditorFor(m=>m.City)
+			@Html.EditorFor(m=>m.Region)
+			@Html.EditorFor(m=>m.BuildingType)
+			@Html.EditorFor(m=>m.Country)
+			@Html.EditorFor(m=>m.Longtitude)
+			@Html.EditorFor(m=>m.Latitude)
+			@Html.EditorFor(m=>m.NumberOfStoreys)
+			@Html.EditorFor(m=>m.FloorHeight)
+			@Html.EditorFor(m=>m.BuildingLength)
+			@Html.EditorFor(m=>m.BuildingWidth)
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.TemplateID, new { @class = "control-label" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(m => m.TemplateID, new SelectList(Model.templates, "ID", "Description"), "Select a category")
+				@Html.ValidationMessageFor(m => m.TemplateID, "Choose a template", new { @class = "text-danger"})
+			</div>
+		</div>
+
+		<input type="submit" name="Continue" value="Continue" class="button button2" />
+	}
+</body>

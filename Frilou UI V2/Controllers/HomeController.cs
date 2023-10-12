@@ -76,6 +76,7 @@ namespace Frilou_UI_V2.Controllers
 
 				if (role == 1) //admin
 				{
+					HttpContext.Session.SetInt32("UserRole", 1);
 					return RedirectToAction("Account");
 				}
 				else if (role == 2) //employee
@@ -86,7 +87,8 @@ namespace Frilou_UI_V2.Controllers
 						command.Parameters.AddWithValue("@user_credentials_id", id);
 						HttpContext.Session.SetInt32("EmployeeID", Convert.ToInt32(command.ExecuteScalar()));
 					}
-					return RedirectToAction("Account");
+					HttpContext.Session.SetInt32("UserRole", 2);
+					return RedirectToAction("index", "Employee");
 				}
 				else if (role == 3) //supplier
 				{
@@ -96,6 +98,7 @@ namespace Frilou_UI_V2.Controllers
 						command.Parameters.AddWithValue("@user_credentials_id", id);
 						HttpContext.Session.SetInt32("SupplierID", Convert.ToInt32(command.ExecuteScalar()));
 					}
+					HttpContext.Session.SetInt32("UserRole", 3);
 					return RedirectToAction("SupplierMaterialsView");
 				}
 				conn.Close();
@@ -918,13 +921,14 @@ namespace Frilou_UI_V2.Controllers
 							info_id = Convert.ToUInt32(command.ExecuteScalar());
 						}
 
-						using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`supplier_info` (`user_credentials_id`,`supplier_desc`,`supplier_address`,`supplier_city`,`supplier_admin_district`,`supplier_country`,`supplier_coordinates_latitude`,`supplier_coordinates_longtitude`,`supplier_contact_name`,`supplier_contact_number`) " +
-							"VALUES (@user_credentials_id, @Desc, @Address, @City, @supplier_admin_district, @supplier_country, @Longtitude, @Latitude, @ContactName, @ContactNumber);"))
+						using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`supplier_info` (`user_credentials_id`,`employee_id`,`supplier_desc`,`supplier_address`,`supplier_city`,`supplier_admin_district`,`supplier_country`,`supplier_coordinates_latitude`,`supplier_coordinates_longtitude`,`supplier_contact_name`,`supplier_contact_number`) " +
+							"VALUES (@user_credentials_id,@employee_id, @Desc, @Address, @City, @supplier_admin_district, @supplier_country, @Longtitude, @Latitude, @ContactName, @ContactNumber);"))
 						{
 							command.Connection = conn;
 							command.Transaction = transaction;
 
 							command.Parameters.AddWithValue("@user_credentials_id", info_id);
+							command.Parameters.AddWithValue("@employee_id", HttpContext.Session.GetInt32("EmployeeID"));
 							command.Parameters.AddWithValue("@Desc", model.Description);
 							command.Parameters.AddWithValue("@Address", model.Address);
 							command.Parameters.AddWithValue("@City", model.City);
@@ -1485,17 +1489,24 @@ namespace Frilou_UI_V2.Controllers
 				conn.Open();
 				foreach (SupplierMaterialViewItems x in model)
 				{
-					Debug.WriteLine("lul");
-					using (MySqlCommand command = new MySqlCommand("UPDATE `bom_mce_db`.`supplier_materials` SET " +
-						"supplier_material_price = @supplier_material_price, " +
-						"supplier_material_availability = @supplier_material_availability " +
-						"WHERE supplier_material_id = @supplier_material_id"))
-					{
-						command.Parameters.AddWithValue("@supplier_material_price", Convert.ToInt32(x.Price * 100));
-						command.Parameters.AddWithValue("@supplier_material_availability", Convert.ToBoolean(x.IsAvailable));
-						command.Parameters.AddWithValue("@supplier_material_id", Convert.ToInt32(x.ID));
-						command.Connection = conn;
-						command.ExecuteNonQuery();
+					if ((x.PreviousPrice != x.Price) || (x.PreviousIsAvailable != x.IsAvailable)) {
+						Debug.WriteLine("lul");
+						using (MySqlCommand command = new MySqlCommand("UPDATE `bom_mce_db`.`supplier_materials` SET " +
+							"supplier_material_archived = @supplier_material_archived " +
+							"WHERE supplier_material_id = @supplier_material_id; " +
+							"INSERT INTO `bom_mce_db`.`supplier_materials` (`supplier_id`, `material_id`, `supplier_material_price`, `supplier_material_availability`, `supplier_material_archived`) " +
+							"VALUES (@supplier_id, @material_id, @supplier_material_price, @supplier_material_availability, @supplier_material_archived2);"))
+						{
+							command.Connection = conn;
+							command.Parameters.AddWithValue("@supplier_material_id", x.ID);
+							command.Parameters.AddWithValue("@supplier_id", HttpContext.Session.GetInt32("SupplierID"));
+							command.Parameters.AddWithValue("@material_id", x.MaterialID);
+							command.Parameters.AddWithValue("@supplier_material_price", x.Price * 100);
+							command.Parameters.AddWithValue("@supplier_material_availability", x.IsAvailable);
+							command.Parameters.AddWithValue("@supplier_material_archived", true);
+							command.Parameters.AddWithValue("@supplier_material_archived2", false);
+							command.ExecuteNonQuery();
+						}
 					}
 				}
 			}
@@ -1517,7 +1528,7 @@ namespace Frilou_UI_V2.Controllers
 				using (MySqlCommand command = new MySqlCommand("SELECT c.material_desc_long, b.supplier_desc, a.supplier_material_price FROM supplier_materials a " +
 					"INNER JOIN supplier_info b ON a.supplier_id = b.supplier_id " +
 					"INNER JOIN materials c ON a.material_id = c.material_id " +
-					"WHERE supplier_material_availability = 1 " +
+					"WHERE supplier_material_availability = 1 AND supplier_material_archived = false " +
 					"ORDER BY c.material_id;"))
 				{
 					command.Connection = conn;
@@ -1582,7 +1593,7 @@ namespace Frilou_UI_V2.Controllers
 			using (MySqlConnection conn = new MySqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM supplier_materials WHERE supplier_id = @supplier_id;"))
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM supplier_materials WHERE supplier_id = @supplier_id AND supplier_material_archived = false;"))
 				{
 					command.Connection = conn;
 					command.Parameters.AddWithValue("@supplier_id", HttpContext.Session.GetInt32("SupplierID"));
@@ -1611,19 +1622,20 @@ namespace Frilou_UI_V2.Controllers
 
 					foreach (int x_id in material_ids)
 					{
-						using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`supplier_materials` (`supplier_id`, `material_id`, `supplier_material_price`, `supplier_material_availability`) " +
-						"VALUES (@supplier_id, @material_id, @supplier_material_price, @supplier_material_availability);"))
+						using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`supplier_materials` (`supplier_id`, `material_id`, `supplier_material_price`, `supplier_material_availability`, `supplier_material_archived`) " +
+						"VALUES (@supplier_id, @material_id, @supplier_material_price, @supplier_material_availability, @supplier_material_archived);"))
 						{
 							command.Connection = conn;
 							command.Parameters.AddWithValue("@supplier_id", HttpContext.Session.GetInt32("SupplierID"));
 							command.Parameters.AddWithValue("@material_id", x_id);
 							command.Parameters.AddWithValue("@supplier_material_price", 0);
 							command.Parameters.AddWithValue("@supplier_material_availability", false);
+							command.Parameters.AddWithValue("@supplier_material_archived", false);
 							command.ExecuteNonQuery();
 						}
 					}
 				}
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM supplier_materials a INNER JOIN materials b ON a.material_id = b.material_id INNER JOIN measurement_units c ON b.measurement_unit_id = c.measurement_unit_id WHERE supplier_id = @supplier_id;"))
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM supplier_materials a INNER JOIN materials b ON a.material_id = b.material_id INNER JOIN measurement_units c ON b.measurement_unit_id = c.measurement_unit_id WHERE supplier_id = @supplier_id AND supplier_material_archived = false ORDER BY b.material_id ASC;"))
 				{
 					command.Connection = conn;
 					command.Parameters.AddWithValue("@supplier_id", HttpContext.Session.GetInt32("SupplierID"));
@@ -1634,11 +1646,14 @@ namespace Frilou_UI_V2.Controllers
 							materials.Add(new SupplierMaterialViewItems()
 							{
 								IsAvailable = Convert.ToBoolean(sdr["supplier_material_availability"]),
+								PreviousIsAvailable = Convert.ToBoolean(sdr["supplier_material_availability"]),
 								ID = Convert.ToUInt32(sdr["supplier_material_id"]),
+								MaterialID = Convert.ToUInt32(sdr["material_id"]),
 								Description_Long = sdr["material_desc_long"].ToString(),
 								MeasurementString = sdr["measurement_unit_desc_short"].ToString(),
 								MeasurementValue = sdr["material_measurement_value"].ToString(),
-								Price = Convert.ToDouble(sdr["supplier_material_price"]) / 100
+								Price = Convert.ToDouble(sdr["supplier_material_price"]) / 100,
+								PreviousPrice = Convert.ToDouble(sdr["supplier_material_price"]) / 100
 							});
 						}
 					}

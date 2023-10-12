@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<TemplateListItem>
+
+<head>
+
+</head>
+
+<body>
+	@if (Model != null || Model.Count != 0)
+	{
+		foreach(TemplateListItem x in Model)
+		{
+			<div class="cards">
+				<p>Name: @x.Descritpion</p>
+				<p>Description: @x.Long_Description</p>
+				@Html.ActionLink("Edit", "TemplatesEdit", "Employee", new { id = x.ID })
+			</div>
+		}
+	}
+	else if (Model.Count == 0)
+	{
+		<h2 style="text-align:center;">No templates yet</h2>
+	}
+
+	@Html.ActionLink("Add new template", "NewTemplate", "Employee")
+</body>
