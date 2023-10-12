@@ -51,13 +51,6 @@
 		</div>
 
 		<div>
-			@Html.LabelFor(m=>m.buildingMaterialDesc, new { @class = "col-md-2 control-label" })
-			<div>
-				@Html.TextBoxFor(m=>m.buildingMaterialDesc, new { @class = "form-control", @readonly="true"})
-			</div>
-		</div>
-
-		<div>
 			@Html.LabelFor(m=>m.storeys, new { @class = "col-md-2 control-label" })
 			<div>
 				@Html.TextBoxFor(m=>m.storeys, new { @class = "form-control", @readonly="true"})
@@ -88,10 +81,13 @@
 		<div>
 			<table style="width: 100%">
 				<tr>
-					<th style="width: 10%">Item</th>
-					<th style="width: 50%">Material Name</th>
-					<th style="width: 20%">UoM</th>
-					<th style="width: 20%">Quantity</th>
+					<th style="width: 5%">Item</th>
+					<th style="width: 30%">Material Name</th>
+					<th style="width: 5%">UoM</th>
+					<th style="width: 10%">Quantity</th>
+					<th style="width: 10%">Unit Rate</th>
+					<th style="width: 30%">Supplier</th>
+					<th style="width: 10%">Amount</th>
 				</tr>
 				@{int listCount = 0;}
 				@foreach (BOMList list in Model.lists)
@@ -101,6 +97,9 @@
 					<tr style="background: #BBBBBB; padding-top: 16px; padding-bottom: 16px;">
 						<td>A</td>
 						<td><b>@list.Desc</b></td>
+						<td></td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -114,15 +113,21 @@
 							<td><b>@Model.categories[(int)item.item_id-1].description</b></td>
 							<td></td>
 							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
 						</tr>
 
 						foreach (BOMSubitems subitem in item.subitems)
 						{
 							<tr>
 								<td></td>
-								<td>@Model.materials[(int)subitem.item_id-1].material_desc</td>
-								<td>@Model.measurements[(int)Model.materials[(int)subitem.item_id-1].unit_id-1].description</td>
+								<td>@Model.materials[(int)subitem.item_id-1].Description</td>
+								<td>@Model.measurements[(int)Model.materials[(int)subitem.item_id-1].UoM_ID-1].description</td>
 								<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.Quantity))</td>
+								<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.subitem_cost))</td>
+								<td>@subitem.Supplier</td>
+								<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.Amount))</td>
 							</tr>
 						}
 
@@ -131,11 +136,14 @@
 							<td>@Html.ActionLink("Add Subitem", "BOMAddSubitem", new { id = (listIndex + "s" + itemIndex) })</td>
 							<td></td>
 							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
 						</tr>
 					};
 					<tr style="background: #EEEEEE">
 						<!--<td></td>-->
-						<td colspan="4">@Html.ActionLink("Add Item", "BOMAddItem", new { id = listIndex })</td>
+						<td colspan="7">@Html.ActionLink("Add Item", "BOMAddItem", new { id = listIndex })</td>
 						<!--<td><a asp-action="BOMAddItem" asp-all-route-data="itemIndex;">Add Item</a></td>-->
 						<!--<td></td>
 						<td></td>
@@ -147,7 +155,7 @@
 
 				<tr style="background: #BBBBBB">
 					<!--<td></td>-->
-					<td colspan="4"><a asp-action="BOMAddList">Add List</a></td>
+					<td colspan="7"><a asp-action="BOMAddList">Add List</a></td>
 					<!--<td></td>
 					<td></td>
 					<td></td>

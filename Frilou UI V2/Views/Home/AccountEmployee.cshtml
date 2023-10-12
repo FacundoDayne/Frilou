@@ -1,8 +1,40 @@
 ﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-<main>
-    <h3>Account Information</h3>
+<head>
+	<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN"></script>
+	<style>
+		.column {
+			float: left;
+			width: 50%;
+		}
 
+		.row:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+		.contents {
+			display: none;
+		}
+
+		.contents {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.3s ease-out;
+		}
+
+			.content.active {
+				max-height: 1000px; /* Adjust to your content's maximum height */
+			}
+	</style>
+
+	<script>
+	</script>
+</head>
+<body>
+    <h3>Account Information</h3>
+	<!--
     <div class="accountGrid">
         <div class="cards">
             <img class="placeholder" src="../../Images/placeholder.png" alt="logo"> <br>
@@ -18,4 +50,72 @@
             <button class="button button2" onclick="location.href='@Url.Action("EditPartner")'">Edit Partner</button>
         </div>
     </div>
-</main>
+	-->
+	<button class="collapsible">Map</button>
+	<div class="contents">
+		<div class="row">
+			<div class="column">
+				<div id="myMap" style="position:relative;width:600px;height:600px;"></div>
+			</div>
+			<div class="column">
+				<label>Address</label><br />
+				<input id="Address"/><br />
+				<label>Coordinates</label><br />
+				<input id="Coords"/>
+
+			</div>
+		</div>
+	</div>
+	<p>a</p>
+
+	<script>
+	  function loadMapScenario() {
+			var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+				credentials: 'ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN',
+				center: new Microsoft.Maps.Location(14.552120, 121.056068), // Initial location (latitude, longitude)
+				zoom: 12 // Initial zoom level
+		  
+			});
+			Microsoft.Maps.Events.addHandler(map, 'click', function (e) {
+				var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+				var location = e.target.tryPixelToLocation(point);
+				reverseGeocode(location);
+			});
+			function reverseGeocode(location) {
+				var apiUrl = `https://dev.virtualearth.net/REST/v1/Locations/${location.latitude},${location.longitude}?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN`;
+
+				fetch(apiUrl)
+					.then(response => response.json())
+					.then(data => {
+						if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+							var address = data.resourceSets[0].resources[0].address.formattedAddress;
+							document.getElementById('Address').value = address;
+
+							var coordinates = `${location.latitude}, ${location.longitude}`;
+							
+							document.getElementById('Coords').value = coordinates;
+
+							map.entities.removeAt(0);
+							var pushpin = new Microsoft.Maps.Pushpin(location);
+							map.entities.push(pushpin);
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+	  }
+		const body = document.querySelector('body');
+		body.onload = loadMapScenario;
+
+		var button = document.querySelector('.collapsible');
+		var content = document.querySelector('.contents');
+
+		// Add a click event listener to the button
+		button.addEventListener('click', function () {
+			// Toggle the 'active' class to show/hide the content
+			content.classList.toggle('active');
+		});
+	</script>
+
+</body>

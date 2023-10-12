@@ -86,7 +86,7 @@ namespace Frilou_UI_V2.Models
 		}
 	}
 
-	public class AddMaterialModel
+	public class AddMaterialModel_old
 	{
 		public IList<MeasurementList> measurements { get; set; }
 		public IList<CategoryList> categories { get; set; }
@@ -305,8 +305,8 @@ namespace Frilou_UI_V2.Models
 		public string Desc { get; set; }
 		public IList<MCESubitems> subitems { get; set; }
 	}
-
-	public class MCEList
+	
+	public class MCELista
 	{
 		public string Desc { get; set; }
 		public IList<MCEItems> items { get; set; }
@@ -392,10 +392,40 @@ namespace Frilou_UI_V2.Models
 	{
 		public IList<BuidlingMaterialItem>? MaterialsList { get; set; }
 
+		[StringLength(100, MinimumLength = 1)]
 		[Required]
-		[Display(Name = "Building Material")]
-		[Range(1, 1000000000)]
-		public int BuildingMaterial { get; set; }
+		[Display(Name = "Project Title")]
+		public string Title { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project Address")]
+		public string Address { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project City")]
+		public string City { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project Region")]
+		public string Region { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project Country")]
+		public string Country { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Longtitude")]
+		public string Longtitude { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Latitude")]
+		public string Latitude { get; set; }
 
 		[Required]
 		[Display(Name = "Number of Storeys")]
@@ -422,13 +452,18 @@ namespace Frilou_UI_V2.Models
 	{
 		public int? id { get; set; }
 		public uint item_id { get; set; }
+		public string subitem_desc { get; set; }
+		public string subitem_cost { get; set; }
+		public string Supplier { get; set; }
 		public string Quantity { get; set; }
+		public string Amount { get; set; }
 	}
 
 	public class BOMItems
 	{
 		public int? id { get; set; }
 		public uint item_id { get; set; }
+		public string item_desc { get; set; }
 		public IList<BOMSubitems> subitems { get; set; }
 	}
 
@@ -441,7 +476,7 @@ namespace Frilou_UI_V2.Models
 
 	public class BillOfMaterialsModel
 	{
-		public IList<MaterialItem>? materials { get; set; }
+		public IList<MaterialsListModel>? materials { get; set; }
 		public IList<CategoryList>? categories { get; set; }
 		public IList<MeasurementList>? measurements { get; set; }
 
@@ -456,6 +491,31 @@ namespace Frilou_UI_V2.Models
 		[Required]
 		[Display(Name = "Project Address")]
 		public string Address { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project City")]
+		public string City { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project Region")]
+		public string Region { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Project Country")]
+		public string Country { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Longtitude")]
+		public string Longtitude { get; set; }
+
+		[StringLength(100, MinimumLength = 1)]
+		[Required]
+		[Display(Name = "Latitude")]
+		public string Latitude { get; set; }
 
 		[Required]
 		[Display(Name = "Project Date")]
@@ -472,10 +532,6 @@ namespace Frilou_UI_V2.Models
 		[Display(Name = "Project ID")]
 		public uint? ID { get; set; }
 
-		public string? buildingMaterial { get; set; }
-
-		[Display(Name = "Project Building Material")]
-		public string? buildingMaterialDesc { get; set; }
 
 		[Display(Name = "Nomber of Storeys")]
 		public int? storeys { get; set; }
@@ -586,19 +642,47 @@ namespace Frilou_UI_V2.Models
 	public class MCECreateModel
 	{
 		public int? id { get; set; }
-		public int bom_id { get; set; }
 		public double markup { get; set; }
+
+		public IList<MaterialItem>? materials { get; set; }
+		public IList<CategoryList>? categories { get; set; }
+		public IList<MeasurementList>? measurements { get; set; }
+
+		public IList<MCEList>? lists { get; set; }
+
+		public uint MCE_ID { get; set; }
+		public uint BOM_ID { get; set; }
+
+		public string? buildingMaterial { get; set; }
+	}
+
+	public class MCEList
+	{
+		public int? id { get; set; }
+		public string Desc { get; set; }
+		public IList<MCEItem> items { get; set; }
+	}
+
+	public class MCEItem
+	{
+		public int? id { get; set; }
+		public uint item_id { get; set; }
+		public string item_desc { get; set; }
+		public IList<MCESubitem> subitems { get; set; }
 	}
 
 	public class MCESubitem
 	{
 		public int? id { get; set; }
-		public int mce_id { get; set; }
-		public int subitem_id { get; set; }
-		public double markup { get; set; }
-
 		public uint item_id { get; set; }
+		public string uom_desc { get; set; }
+		public string subitem_desc { get; set; }
+		public string subitem_cost { get; set; }
+		public string Supplier { get; set; }
 		public string Quantity { get; set; }
+		public string Amount { get; set; }
+
+		public uint bom_tem_id { get; set; }
 	}
 
 

@@ -4,7 +4,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
 }
-@model MaterialsEditViewModel
+@model List<MaterialsCostListModel>
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <head>
 	<style>
@@ -15,6 +15,15 @@
 		.validation-summary-valid {
 			display: none;
 		}
+		/* Style for odd rows */
+		tr:nth-child(odd) {
+			background-color: #f2f2f2; /* Light gray background */
+		}
+
+		/* Style for even rows */
+		tr:nth-child(even) {
+			background-color: #ffffff; /* White background */
+		}
 	</style>
 </head>
 <body>
@@ -23,18 +32,16 @@
 	<div>
 		<table>
 			<tr>
-				<th>ID</th>
-				<th>Description</th>
-				<th></th>
+				<th>Material</th>
+				<th>Supplier</th>
+				<th>Price</th>
 			</tr>
-			@foreach (MaterialsEditViewItem x in Model.items)
+			@foreach (MaterialsCostListModel x in Model)
 			{
-				<tr>
-					<td>@x.ID</td>
-					<td>@x.Description</td>
-					<td>
-						<a asp-action="EditProduct" asp-route-id="@x.ID">Edit</a>
-					</td>
+				<tr style="padding: 10px,10px,10px,10px;">
+					<td>@x.Description_Long</td>
+					<td>@x.Supplier_Desc</td>
+					<td>@x.Price</td>
 				</tr>
 			}
 		</table>

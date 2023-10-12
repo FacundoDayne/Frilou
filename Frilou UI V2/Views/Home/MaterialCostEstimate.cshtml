@@ -41,12 +41,12 @@
 					<td></td>
 				</tr>
 				int itemCount = 0;
-				foreach (MCEItems item in list.items)
+				foreach (MCEItem item in list.items)
 				{
 					itemCount++;
 					<tr style="background: #EEEEEE">
 						<td>@listCount.@itemCount</td>
-						<td><b>@item.Desc</b></td>
+						<td><b>@item.item_desc</b></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -54,15 +54,15 @@
 						<td></td>
 					</tr>
 
-					foreach (MCESubitems subitem in item.subitems)
+					foreach (MCESubitem subitem in item.subitems)
 					{
 						<tr>
 							<td></td>
-							<td>@subitem.Desc</td>
-							<td>@subitem.UoM</td>
+							<td>@subitem.subitem_desc</td>
+							<td>@subitem.uom_desc</td>
 							<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.Quantity))</td>
-							<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.UnitRate))</td>
-							<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.MarkedUp))</td>
+							<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.subitem_cost))</td>
+							<td><input /></td>
 							<td>@string.Format("{0:N2}", Convert.ToDouble(subitem.Amount))</td>
 						</tr>
 					}

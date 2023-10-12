@@ -1,0 +1,76 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model MCE_ItemEditModel
+<body>
+@using (Html.BeginForm("MCE_EditRow", "BOM", FormMethod.Post))
+{
+	<div>
+		@Html.LabelFor(m=>m.MaterialDesc)
+		<div>
+			<p>@Model.MaterialDesc</p>
+		</div>
+	</div>
+	<div>
+		@Html.LabelFor(m=>m.MaterialUoM)
+		<div>
+			<p>@Model.MaterialUoM</p>
+		</div>
+	</div>
+	<div>
+		@Html.LabelFor(m=>m.MaterialQuantity)
+		<div>
+			<p id="quantity">@Model.MaterialQuantity</p>
+		</div>
+	</div>
+	<div>
+		@Html.LabelFor(m=>m.MaterialCost)
+		<div>
+			<p id="MaterialCost">@Model.MaterialCost</p>
+		</div>
+	</div>
+	<div>
+		@Html.LabelFor(m=>m.LabourCost)
+		<div>
+			<p>@Html.TextBoxFor(m=>m.LabourCost, new {@id = "LabourCost"})</p>
+		</div>
+	</div>
+	<div>
+		@Html.LabelFor(m=>m.TotalUnitRate)
+		<div>
+			<p id="TotalUnitRate">@Model.TotalUnitRate</p>
+		</div>
+	</div>
+	<div>
+		@Html.LabelFor(m=>m.MaterialAmount)
+		<div>
+			<p id="MaterialAmount">@Model.MaterialAmount</p>
+		</div>
+	</div>
+}
+<script>
+	const textBox1 = document.getElementById("LabourCost");
+	const quantity = document.getElementById("quantity");
+	const materialcost = document.getElementById("MaterialCost");
+	const amount = document.getElementById("MaterialAmount");
+	const totalrate = document.getElementById("TotalUnitRate");
+
+	// Store the initial value of the text box
+	let initialValue = textBox1.value;
+
+	// Add an event listener to detect changes
+	textBox1.addEventListener("input", function () {
+		// Check if the current value is different from the initial value
+		if (textBox1.value !== initialValue) {
+			console.log("Text box value has changed:", textBox1.value);
+			amount.value = parseFloat(textBox1.value) + parseFloat(materialcost.value);
+			totalrate.value = parseFloat(quantity.value) * parseFloat(amount.value);
+			// You can perform actions or call functions here
+			// For example, update a preview, enable a "Save" button, etc.
+			initialValue = textBox1.value; // Update the initial value
+		}
+	});
+</script>
+</body>

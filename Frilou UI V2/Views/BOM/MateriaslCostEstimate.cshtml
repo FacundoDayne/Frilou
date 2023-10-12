@@ -1,0 +1,140 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model MCE_Information
+<head>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	@using (Html.BeginForm("MateriaslCostEstimate", "BOM", FormMethod.Post))
+	{
+		<div style="display: none">
+		@Html.EditorFor(m=>m.materialCost)
+		@Html.EditorFor(m=>m.labourCost)
+		@Html.EditorFor(m=>m.totalCost)
+		@Html.EditorFor(m=>m.profit)
+		@Html.EditorFor(m=>m.VAT)
+		@Html.EditorFor(m=>m.totalProjectCost)
+
+		@Html.EditorFor(m=>m.info)
+
+		@Html.EditorFor(m=>m.info.specs)
+		@Html.EditorFor(m=>m.info.totalCost)
+
+		@Html.EditorFor(m=>m.info.specs.materials)
+		@Html.EditorFor(m=>m.info.specs.materials.Materials)
+
+		@for (int i = 0; i < Model.info.specs.materials.Materials.Count; i++)
+		{
+			@Html.EditorFor(m=>m.info.specs.materials.Materials[i].ID)
+			@Html.EditorFor(m=>m.info.specs.materials.Materials[i].Description)
+			@Html.EditorFor(m=>m.info.specs.materials.Materials[i].IsUsed)
+		}
+
+		@Html.EditorFor(m=>m.info.specs.Title)
+		@Html.EditorFor(m=>m.info.specs.Reference)
+		@Html.EditorFor(m=>m.info.specs.Address)
+		@Html.EditorFor(m=>m.info.specs.City)
+		@Html.EditorFor(m=>m.info.specs.Region)
+		@Html.EditorFor(m=>m.info.specs.Country)
+		@Html.EditorFor(m=>m.info.specs.Latitude)
+		@Html.EditorFor(m=>m.info.specs.Longtitude)
+		@Html.EditorFor(m=>m.info.specs.NumberOfStoreys)
+		@Html.EditorFor(m=>m.info.specs.FloorHeight)
+		@Html.EditorFor(m=>m.info.specs.BuildingWidth)
+		@Html.EditorFor(m=>m.info.specs.BuildingLength)
+
+		@Html.EditorFor(m=>m.info.lists)
+
+		@for (int i = 0; i < Model.info.lists.Count; i++)
+		{
+			@Html.EditorFor(m=>m.info.lists[i])
+			@Html.EditorFor(m=>m.info.lists[i].Description)
+			@Html.EditorFor(m=>m.info.lists[i].ListNumber)
+			@Html.EditorFor(m=>m.info.lists[i].ListLetter)
+			@Html.EditorFor(m=>m.info.lists[i].Items)
+
+			@for (int x = 0; x < Model.info.lists[i].Items.Count; x++)
+			{
+				@Html.EditorFor(m=>m.info.lists[i].Items[x])
+				@Html.EditorFor(m=>m.info.lists[i].Items[x].ItemNumber)
+				@Html.EditorFor(m=>m.info.lists[i].Items[x].Description)
+				@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems)
+
+				@for (int y = 0; y < Model.info.lists[i].Items[x].Subitems.Count; y++)
+				{
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y])
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].SubitemNumber)
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].MaterialID)
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].MaterialDesc)
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].MaterialQuantity)
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].MaterialUoM)
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].MaterialCost)
+					//@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].MaterialAmount)
+					//@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].LabourCost)
+					@Html.EditorFor(m=>m.info.lists[i].Items[x].Subitems[y].TotalUnitRate)
+				}
+			}
+		}
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Item No.</th>
+					<th colspan="3">Proposed Materials</th>
+					<th colspan="5">Cost Estimate</th>
+				</tr>
+				<tr>
+					<th>Item No.</th>
+					<th>Material Name</th>
+					<th>Quantity</th>
+					<th>UoM</th>
+					<th>Cost per unit</th>
+					<th>Labour cost</th>
+					<th>Total cost per unit</th>
+					<th>Total Amount</th>
+				</tr>
+			</thead>
+			<tbody class="text-box-container">
+				@for (int x = 0; x < Model.info.lists.Count; x++)
+				{
+					<tr style="background: #BBBBBB">
+						<!--<td><span>Convert.ToChar(Model.info.lists[x].ListLetter + ('A'))</span><span>-Model.info.lists[x].ListNumber</span></td>-->
+						<td colspan="7">@Model.info.lists[x].Description</td>
+					</tr>
+					@for (int y = 0; y < Model.info.lists[x].Items.Count; y ++)
+					{
+						<tr style="background: #EEEEEE">
+							<td>@Model.info.lists[x].Items[y].ItemNumber</td>
+							<td colspan="7">@Model.info.lists[x].Items[y].Description</td>
+						</tr>
+						@for (int z = 0; z < Model.info.lists[x].Items[y].Subitems.Count; z++)
+						{
+							{
+								<tr>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].SubitemNumber</td>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].MaterialDesc</td>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].MaterialQuantity</td>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].MaterialUoM</td>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].MaterialCost</td>
+									<td>@Html.TextBoxFor(m=>m.info.lists[x].Items[y].Subitems[z].LabourCost)</td>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].TotalUnitRate</td>
+									<td>@Model.info.lists[x].Items[y].Subitems[z].MaterialAmount</td>
+								</tr>
+							}
+						}
+					}
+				}
+				<tr style="background: #BBBBBB">
+					<td colspan="7" style="text-align:right">Amount:</td>
+					<td>@string.Format("{0:N2}", Model.totalCost)</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<input type="submit" name="submitButton" value="Submit1" class="button button2" />
+	}
+</body>

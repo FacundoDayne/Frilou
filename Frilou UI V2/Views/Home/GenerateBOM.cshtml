@@ -1,5 +1,6 @@
 ﻿@model GenerateBOMModel
 <head>
+	<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN"></script>
 	<style>
 		.field-validation-valid {
 			display: none;
@@ -14,44 +15,64 @@
     <div class="container">
         <!-- Generate BOM Page content here -->
         <h2>Generate Bill of Materials</h2>
-        <!--
-		<form id="generateBOMForm" class="form">
-            <div class="form-group">
-                <label for="typeOfBuilding">Type of Building:</label>
-                <select id="typeOfBuilding" name="typeOfBuilding" class="form-control" required>
-                    <option value="industrial">Industrial</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="preferredBuildingMaterial">Preferred Building Material:</label>
-                <select id="preferredBuildingMaterial" name="preferredBuildingMaterial" class="form-control" required>
-                    <option value="wood">Wood</option>
-                    <option value="concrete">Concrete</option>
-                    <option value="steel">Steel</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="buildingHeight">Height of Building (in Meters):</label>
-                <input type="number" id="buildingHeight" name="buildingHeight" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="buildingWidth">Width of Building (in Meters):</label>
-                <input type="number" id="buildingWidth" name="buildingWidth" class="form-control" required>
-            </div>
-            <button class="btn btn-primary" type="submit">Generate BOM</button>
-        </form>
-		-->
 		@using (Html.BeginForm("GenerateBOM", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
 		{
 			@Html.AntiForgeryToken()
 
 			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+			<div>
+				@Html.LabelFor(m=>m.Title, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.Title, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m=>m.Title, "Enter project title", new { @class = "text-danger" })
+				</div>
+			</div>
 
-			<div class="form-group">
-				@Html.LabelFor(m => m.BuildingMaterial, new { @class = "col-md-2 control-label" })
-				<div class="col-md-10">
-					@Html.DropDownListFor(m => m.BuildingMaterial, new SelectList(Model.MaterialsList, "Id", "description"), "Select a Material")
-					@Html.ValidationMessageFor(m => m.BuildingMaterial, "Choose a building material", new { @class = "text-danger" })
+			<div>
+				@Html.LabelFor(m=>m.Address, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.Address, new { @class = "form-control", @id="address"  })
+					@Html.ValidationMessageFor(m=>m.Address, "Enter project address", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div>
+				@Html.LabelFor(m=>m.City, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.City, new { @class = "form-control", @id="city"  })
+					@Html.ValidationMessageFor(m=>m.City, "Enter project City", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div>
+				@Html.LabelFor(m=>m.Region, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.Region, new { @class = "form-control" , @id="AdminDistrict" })
+					@Html.ValidationMessageFor(m=>m.Region, "Enter project Region", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div>
+				@Html.LabelFor(m=>m.Country, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.Country, new { @class = "form-control", @id="Country" })
+					@Html.ValidationMessageFor(m=>m.Country, "Enter project Country", new { @class = "text-danger" })
+				</div>
+			</div>
+			<div id="myMap" style="position:relative;width:100%;height:600px;"></div>
+			<div>
+				@Html.LabelFor(m=>m.Latitude, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.Latitude, new { @class = "form-control", @id="latitude"  })
+					@Html.ValidationMessageFor(m=>m.Latitude, "Enter project address", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div>
+				@Html.LabelFor(m=>m.Longtitude, new { @class = "col-md-2 control-label" })
+				<div>
+					@Html.TextAreaFor(m=>m.Longtitude, new { @class = "form-control", @id="longtitude" })
+					@Html.ValidationMessageFor(m=>m.Longtitude, "Enter project address", new { @class = "text-danger" })
 				</div>
 			</div>
 
@@ -90,6 +111,48 @@
 			<input type="submit" value="Submit" class="button button2" />
 		}
 	</div>
+	<script>
+		function loadMapScenario() {
+			var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+				credentials: 'ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN',
+				center: new Microsoft.Maps.Location(14.552120, 121.056068), // Initial location (latitude, longitude)
+				zoom: 12 // Initial zoom level
+
+			});
+			Microsoft.Maps.Events.addHandler(map, 'click', function (e) {
+				var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+				var location = e.target.tryPixelToLocation(point);
+				reverseGeocode(location);
+			});
+			function reverseGeocode(location) {
+				var apiUrl = `https://dev.virtualearth.net/REST/v1/Locations/${location.latitude},${location.longitude}?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN`;
+
+				fetch(apiUrl)
+					.then(response => response.json())
+					.then(data => {
+						if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+							var address = data.resourceSets[0].resources[0].address.formattedAddress;
+
+							document.getElementById('address').value = data.resourceSets[0].resources[0].address.addressLine;
+							document.getElementById('city').value = data.resourceSets[0].resources[0].address.locality;
+							document.getElementById('AdminDistrict').value = data.resourceSets[0].resources[0].address.adminDistrict;
+							document.getElementById('Country').value = data.resourceSets[0].resources[0].address.countryRegion;
+							document.getElementById('longtitude').value = location.longitude;
+							document.getElementById('latitude').value = location.latitude;
+
+							map.entities.removeAt(0);
+							var pushpin = new Microsoft.Maps.Pushpin(location);
+							map.entities.push(pushpin);
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+		}
+		const body = document.querySelector('body');
+		body.onload = loadMapScenario;
+	</script>
 	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
 	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
 </body>

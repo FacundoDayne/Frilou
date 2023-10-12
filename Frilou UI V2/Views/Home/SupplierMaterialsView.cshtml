@@ -1,0 +1,59 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+}
+@model List<SupplierMaterialViewItems>
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<head>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
+
+		.validation-summary-valid {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+
+	<h3>Materials</h3>
+	<div>
+		<table>
+			@using (Html.BeginForm("SupplierMaterialsView", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+			{
+				@Html.AntiForgeryToken()
+
+				@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+				<tr>
+					<th>Available</th>
+					<th>Description</th>
+					<th>UoM</th>
+					<th>Amount</th>
+					<th>Price</th>
+				</tr>
+				@for (int i = 0; i < Model.Count; i++)
+				{
+					@Html.HiddenFor(m=>m[i].Description_Long)
+					@Html.HiddenFor(m=>m[i].MeasurementString)
+					@Html.HiddenFor(m=>m[i].MeasurementValue)
+					@Html.HiddenFor(m=>m[i].ID)
+					<tr>
+						<td>@Html.CheckBoxFor(m=>m[i].IsAvailable)</td>
+						<td>@Model[i].Description_Long</td>
+						<td>@Model[i].MeasurementString</td>
+						<td>@Model[i].MeasurementValue</td>
+						<td>@Html.TextBoxFor(m=>m[i].Price,new { @class = "form-control"})</td>
+					</tr>
+				}
+				<input type="submit" value="Submit" class="button button2" />
+			}
+		</table>
+	</div>
+	<br>
+
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+</body>

@@ -1,46 +1,165 @@
-﻿<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+﻿@model AddSupplierModel
 
-<main>
-    <h3>Add Partner</h3>
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<head>
+	<script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN"></script>
+	<style>
+		.field-validation-valid {
+			display: none;
+		}
 
-    <div>
-        <label>Partner Name:</label><br>
-        <input type="text" placeholder="Partner name" class="inputs" /><br>
-    </div><br>
+		.validation-summary-valid {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+    <h3>Add Supplier</h3>
+
     <main class="inputGrid">
+		@using (Html.BeginForm("AddPartner", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+		{
+			@Html.AntiForgeryToken()
 
-        <div>
-            <label>Partnere code:</label><br>
-            <input type="text" class="inputs" placeholder="Partner code" /><br>
-        </div>
+			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div>
-            <label>Nature of Partnership:</label><br>
-            <select id="natureOfPartnership" class="inputs" placeholder="Nature Of Partnership">
-                <option value="a">Vendor</option>
-                <option value="b">Customer</option>
-                <option value="c">Other</option>
-            </select><br>
-        </div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Username, "Enter a Username", new { @class = "text-danger" })
+				</div>
+			</div>
 
-        <div>
-            <label for="email">Email:</label><br>
-            <input type="email" class="inputs" id="email" name="email"><br>
-        </div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Password, "Enter a Password", new { @class = "text-danger" })
+				</div>
+			</div>
 
-        <div>
-            <label for="myfile">Insert Image:</label><br>
-            <input type="file" class="inputs" id="myfile" name="myfile"><br>
-        </div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.Description, "Enter a name", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Address, new { @class = "form-control", @id="address" })
+					@Html.ValidationMessageFor(m => m.Address, "Enter an address", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.City, new { @class = "form-control", @id="city" })
+					@Html.ValidationMessageFor(m => m.City, "Enter a city", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.AdminDistrict, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.AdminDistrict, new { @class = "form-control", @id="AdminDistrict" })
+					@Html.ValidationMessageFor(m => m.AdminDistrict, "Enter an admin district", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Country, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Country, new { @class = "form-control", @id="Country" })
+					@Html.ValidationMessageFor(m => m.Country, "Enter a country", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div id="myMap" style="position:relative;width:100%;height:600px;"></div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Longtitude, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Longtitude, new { @class = "form-control", @id="longtitude" })
+					@Html.ValidationMessageFor(m => m.Longtitude, "Select location from map", new { @class = "text-danger"})
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.Latitude, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Latitude, new { @class = "form-control", @id="latitude" })
+					@Html.ValidationMessageFor(m => m.Latitude, "Select location from map", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.ContactName, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.ContactName, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.ContactName, "Enter supplier contact person name", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.ContactNumber, new { @class = "col-md-2 control-label" })
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.ContactNumber, new { @class = "form-control" })
+					@Html.ValidationMessageFor(m => m.ContactNumber, "Enter supplier contact number", new { @class = "text-danger" })
+				</div>
+			</div>
+			<input type="submit" value="Submit" class="button button2" />
+		}
     </main><br>
+	<script>
+		function loadMapScenario() {
+			var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+				credentials: 'ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN',
+				center: new Microsoft.Maps.Location(14.552120, 121.056068), // Initial location (latitude, longitude)
+				zoom: 12 // Initial zoom level
 
-    <div class="description">
-        <label>Description:</label><br>
-        <textarea placeholder="Description"></textarea><br>
-    </div><br>
+			});
+			Microsoft.Maps.Events.addHandler(map, 'click', function (e) {
+				var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+				var location = e.target.tryPixelToLocation(point);
+				reverseGeocode(location);
+			});
+			function reverseGeocode(location) {
+				var apiUrl = `https://dev.virtualearth.net/REST/v1/Locations/${location.latitude},${location.longitude}?key=ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN`;
+
+				fetch(apiUrl)
+					.then(response => response.json())
+					.then(data => {
+						if (data.resourceSets.length > 0 && data.resourceSets[0].resources.length > 0) {
+							var address = data.resourceSets[0].resources[0].address.formattedAddress;
+
+							document.getElementById('address').value = data.resourceSets[0].resources[0].address.addressLine;
+							document.getElementById('city').value = data.resourceSets[0].resources[0].address.locality;
+							document.getElementById('AdminDistrict').value = data.resourceSets[0].resources[0].address.adminDistrict;
+							document.getElementById('Country').value = data.resourceSets[0].resources[0].address.countryRegion;
+							document.getElementById('longtitude').value = location.longitude;
+							document.getElementById('latitude').value = location.latitude;
+
+							map.entities.removeAt(0);
+							var pushpin = new Microsoft.Maps.Pushpin(location);
+							map.entities.push(pushpin);
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+		}
+		const body = document.querySelector('body');
+		body.onload = loadMapScenario;
+	</script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
 
 
-    <button class="button button1">Reset</button>
-    <button class="button button2">Submit</button>
-
-</main>
+</body>
