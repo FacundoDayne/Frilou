@@ -28,6 +28,8 @@
 	<p>Floor height: @Model.FloorHeight</p>
 	<p>Building Length: @Model.BuildingLength</p>
 	<p>Building Width: @Model.BuildingWidth</p>
+		<p>Lon: @Model.Longtitude</p>
+		<p>Lat: @Model.Latitude</p>
 	</div>
 	@using (Html.BeginForm("BOMGenerate", "Employee", FormMethod.Post))
 	{
@@ -55,6 +57,8 @@
 			@Html.EditorFor(m=>m.FloorHeight)
 			@Html.EditorFor(m=>m.BuildingLength)
 			@Html.EditorFor(m=>m.BuildingWidth)
+			@Html.EditorFor(m=>m.ProjectID)
+			@Html.EditorFor(m=>m.FormulaID)
 		</div>
 
 		<div class="form-group">

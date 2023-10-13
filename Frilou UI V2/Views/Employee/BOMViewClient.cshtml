@@ -6,11 +6,11 @@
 @model EmployeeBOMModel
 <head>
 	<script>
-					.field - validation - valid {
+							.field - validation - valid {
 			display: none;
 		}
 
-					.validation - summary - valid {
+							.validation - summary - valid {
 			display: none;
 		}
 	</script>
@@ -103,18 +103,15 @@
 			<thead>
 				<tr>
 					<th></th>
-					<th colspan="5">Proposed Materials</th>
-					<th colspan="3">Cost Estimate</th>
+					<th colspan="3">Proposed Materials</th>
+					<th colspan="2">Cost Estimate</th>
 				</tr>
 				<tr>
 					<th>Item No.</th>
 					<th>Material Name</th>
 					<th>Quantity</th>
-					<th>With Wastage</th>
-					<th>With Wastage + Provisions</th>
 					<th>UoM</th>
 					<th>Cost per unit</th>
-					<th>Supplier</th>
 					<th>Total Amount</th>
 				</tr>
 			</thead>
@@ -124,13 +121,13 @@
 					<tr style="background: #BBBBBB">
 						<td>
 						</td>
-						<td colspan="8">@Model.lists[x].Description</td>
+						<td colspan="5">@Model.lists[x].Description</td>
 					</tr>
 					@for (int y = 0; y < Model.lists[x].Items.Count; y++)
 					{
 						<tr style="background: #EEEEEE">
 							<td>@Model.lists[x].Items[y].ItemNumber</td>
-							<td colspan="8">@Model.lists[x].Items[y].Description</td>
+							<td colspan="5">@Model.lists[x].Items[y].Description</td>
 						</tr>
 						@for (int z = 0; z < Model.lists[x].Items[y].Subitems.Count; z++)
 						{
@@ -138,11 +135,8 @@
 								<tr>
 									<td>@Model.lists[x].Items[y].Subitems[z].SubitemNumber</td>
 									<td>@Model.lists[x].Items[y].Subitems[z].MaterialDesc</td>
-									<td>@Model.lists[x].Items[y].Subitems[z].MaterialQuantity</td>
-									<td>@Model.lists[x].Items[y].Subitems[z].MaterialQuantityWastage</td>
 									<td>@Model.lists[x].Items[y].Subitems[z].MaterialQuantityProvisions</td>
 									<td>@Model.lists[x].Items[y].Subitems[z].MaterialUoM</td>
-									<td>@Model.lists[x].Items[y].Subitems[z].Supplier</td>
 									<td>@string.Format("{0:N2}", Model.lists[x].Items[y].Subitems[z].MaterialCost)</td>
 									<td>@string.Format("{0:N2}", Model.lists[x].Items[y].Subitems[z].MaterialAmount)</td>
 								</tr>
@@ -151,7 +145,7 @@
 					}
 				}
 				<tr style="background: #BBBBBB">
-					<td colspan="8" style="text-align:right">Amount:</td>
+					<td colspan="5" style="text-align:right">Amount:</td>
 					<td>@string.Format("{0:N2}", Model.totalCost)</td>
 				</tr>
 			</tbody>

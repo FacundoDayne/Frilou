@@ -160,11 +160,14 @@ namespace Frilou_UI_V2.Models
 		public double MaterialAmount { get; set; }
 		public double LabourCost { get; set; }
 		public double TotalUnitRate { get; set; }
+		public double SupplierMaterialID { get; set; }
+		public string Supplier { get; set; }
 	}
 
 	public class Employee_BOM_Materials_Items
 	{
 		public IList<Employee_BOM_Materials_Subitems> Subitems { get; set; }
+		public int ItemID { get; set; }
 		public int ItemNumber { get; set; }
 		public string Description { get; set; }
 	}
@@ -175,6 +178,7 @@ namespace Frilou_UI_V2.Models
 		public char ListLetter { get; set; }
 		public int ListNumber { get; set; }
 		public string Description { get; set; }
+		public int ListID { get; set; }
 	}
 
 	public class EmployeeBOMModel
@@ -184,80 +188,82 @@ namespace Frilou_UI_V2.Models
 
 		public double totalCost { get; set; }
 
+		public int FormulaID { get; set; }
 		public int ProjectID { get; set; }
-		[Required]
-		[Display(Name = "Project Title")]
+
+		public double Wastage { get; set; }
+		public double Provisions { get; set; }
+
+
+		[Display(Name = "BOM Creation Date")]
+		public DateTime BOMCreationDate { get; set; }
+
+		[Display(Name = "Template")]
 		public string TemplateID { get; set; }
 
 		[StringLength(100, MinimumLength = 1)]
-		[Required]
 		[Display(Name = "Project Title")]
 		public string Title { get; set; }
 
 		[StringLength(100, MinimumLength = 0)]
-		[Required]
 		[Display(Name = "Client Name")]
 		public string ClientName { get; set; }
 
 		[StringLength(100, MinimumLength = 0)]
-		[Required]
 		[Display(Name = "Client Contact")]
 		public string ClientContact { get; set; }
 
-		[Required]
 		[Display(Name = "Project Date")]
 		public DateTime Date { get; set; }
 
 		[StringLength(100, MinimumLength = 1)]
-		[Required]
 		[Display(Name = "Project Address")]
 		public string Address { get; set; }
 
 		[StringLength(100, MinimumLength = 1)]
-		[Required]
 		[Display(Name = "Project City")]
 		public string City { get; set; }
 
 		[StringLength(100, MinimumLength = 1)]
-		[Required]
 		[Display(Name = "Project Region")]
 		public string Region { get; set; }
 
 		[StringLength(100, MinimumLength = 1)]
-		[Required]
 		[Display(Name = "Project Country")]
 		public string Country { get; set; }
 
-		[Required]
 		[Display(Name = "Longtitude")]
 		public string Longtitude { get; set; }
 
-		[Required]
 		[Display(Name = "Latitude")]
 		public string Latitude { get; set; }
 
-		[Required]
 		[Display(Name = "Building Type")]
 		public string BuildingType { get; set; }
 
-		[Required]
 		[Display(Name = "Number of Storeys")]
 		[Range(1, 1000000000)]
 		public int NumberOfStoreys { get; set; }
 
-		[Required]
 		[Display(Name = "Height of floors")]
 		[Range(1, 1000000000)]
 		public double FloorHeight { get; set; }
 
-		[Required]
 		[Display(Name = "Building Length")]
 		[Range(1, 1000000000)]
 		public double BuildingLength { get; set; }
 
-		[Required]
 		[Display(Name = "Building Width")]
 		[Range(1, 1000000000)]
 		public double BuildingWidth { get; set; }
+	}
+
+	public class Employee_BOM_List_Item
+	{
+		public int ID { get; set; }
+		public string Title { get; set; }
+		public string ClientName { get; set; }
+		public DateTime Date { get; set; }
+		public bool MCEExists { get; set; }
 	}
 }

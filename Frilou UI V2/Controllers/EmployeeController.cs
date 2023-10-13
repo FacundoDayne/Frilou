@@ -298,6 +298,8 @@ namespace Frilou_UI_V2.Controllers
 							model.FloorHeight = Convert.ToDouble(sdr["project_building_floorheight"]);
 							model.BuildingLength = Convert.ToDouble(sdr["project_building_length"]);
 							model.BuildingWidth = Convert.ToDouble(sdr["project_building_width"]);
+							model.Longtitude = sdr["project_longtitude"].ToString();
+							model.Latitude = sdr["project_latitude"].ToString();
 						}
 					}
 				}
@@ -329,6 +331,9 @@ namespace Frilou_UI_V2.Controllers
 		{
 
 			string location = model.Latitude + "," + model.Longtitude;
+			Debug.WriteLine("Lat: " + model.Latitude);
+			Debug.WriteLine("Lon: " + model.Longtitude);
+			Debug.WriteLine("Loc: " + location);
 
 			int noOfStories = model.NumberOfStoreys;
 			 double heightOfFloors = model.FloorHeight,
@@ -381,6 +386,7 @@ namespace Frilou_UI_V2.Controllers
 					{
 						while (sdr.Read())
 						{
+							model.FormulaID = Convert.ToInt32(sdr["formula_constants_id"]);
 							// measurements that are changeable
 							floorThickness = Convert.ToDouble(sdr["floor_thickness"]);
 							wallThickness = Convert.ToDouble(sdr["wall_thickness"]);
@@ -422,22 +428,35 @@ namespace Frilou_UI_V2.Controllers
 				}
 			}
 			// prices, are changeable
-			double rebarPrice = GetBestPrice(5, location).Price, // per piece. Rebars * rebarPrice
-								hollowBlockPrice = GetBestPrice(6, location).Price, // per piece. NoOfHollowBlock * hollowBlockPrice
-								cementPrice = GetBestPrice(2, location).Price, // per cubic meter. CementCubicMeters * cementPrice,
-								sandPrice = GetBestPrice(3, location).Price, // per cubic meter
+			MaterialsCostComparisonItem
+				Cost_rebar = GetBestPrice(5, location),
+				Cost_Hollowblock = GetBestPrice(6, location),
+				Cost_Cement = GetBestPrice(2, location),
+				Cost_Sand = GetBestPrice(3, location),
+				Cost_Aggregate = GetBestPrice(4, location),
+				Cost_Plywood = GetBestPrice(1, location);
+			double rebarPrice = Cost_rebar.Price, // per piece. Rebars * rebarPrice
+								hollowBlockPrice = Cost_Hollowblock.Price, // per piece. NoOfHollowBlock * hollowBlockPrice
+								cementPrice = Cost_Cement.Price, // per cubic meter. CementCubicMeters * cementPrice,
+								sandPrice = Cost_Sand.Price, // per cubic meter
 								sandReducedPrice = (1 / 3) * sandPrice,
 								sandBigPrice = 2 * sandPrice,
-								aggregatePrice = GetBestPrice(4, location).Price, // per cubic meter
+								aggregatePrice = Cost_Aggregate.Price, // per cubic meter
 								aggregateReducedPrice = (1 / 2) * aggregatePrice,
 								aggregateBigPrice = 3 * aggregatePrice,
 								concretePrice = cementPrice + sandPrice + aggregatePrice,
 								concreteReducedPrice = cementPrice + sandReducedPrice + aggregateReducedPrice,
 								concreteBigPrice = cementPrice + sandBigPrice + aggregateBigPrice,
-								plywoodPrice = GetBestPrice(1, location).Price, // per piece 1/4  
+								plywoodPrice = Cost_Plywood.Price, // per piece 1/4  
 								plywoodPricePerSqm = plywoodPrice * plywoodSheetsPerSqm
 
 				;
+			uint RebarCostID = Cost_rebar.SupplierMaterialID,
+				HollowBlockCostID = Cost_Hollowblock.SupplierMaterialID,
+				CementCostID = Cost_Cement.SupplierMaterialID,
+				SandCostID = Cost_Sand.SupplierMaterialID,
+				AggregateCostID = Cost_Aggregate.SupplierMaterialID,
+				PlywoodCostID = Cost_Plywood.SupplierMaterialID;
 
 
 
@@ -455,7 +474,7 @@ namespace Frilou_UI_V2.Controllers
 			/*new*/             foundationRebar = (lengthOfBuilding * widthOfBuilding * rebarPercentage) * foundationHeight,
 								foundationConcrete = foundationVolume
 				;
-
+			model.lists = new List<Employee_BOM_Materials_Lists>();
 			model.lists.Add(new Employee_BOM_Materials_Lists()
 			{
 				Description = $"Foundation",
@@ -468,19 +487,19 @@ namespace Frilou_UI_V2.Controllers
 				Subitems = new List<Employee_BOM_Materials_Subitems>()
 			});
 			int foundationConcreteCement = (int)Math.Ceiling(foundationConcrete * cementRatio);
-			model.lists[0].Items[0].Subitems.Add(GetMaterial(2, foundationConcreteCement, location, 1, cementPrice));
+			model.lists[0].Items[0].Subitems.Add(GetMaterial(2, foundationConcreteCement, location, 1, cementPrice, wastage, provisions, CementCostID));
 
 			int foundationConcreteSand = (int)Math.Ceiling(foundationConcrete * sandRatio);
-			model.lists[0].Items[0].Subitems.Add(GetMaterial(3, foundationConcreteSand, location, 2, sandPrice));
+			model.lists[0].Items[0].Subitems.Add(GetMaterial(3, foundationConcreteSand, location, 2, sandPrice, wastage, provisions, SandCostID));
 
 			int foundationConcreteAggregate = (int)Math.Ceiling(foundationConcrete * aggregateRatio);
-			model.lists[0].Items[0].Subitems.Add(GetMaterial(4, foundationConcreteAggregate, location, 3, aggregatePrice));
+			model.lists[0].Items[0].Subitems.Add(GetMaterial(4, foundationConcreteAggregate, location, 3, aggregatePrice, wastage, provisions, AggregateCostID));
 
 			int foundationRebarAmount = (int)Math.Ceiling(foundationRebar);
-			model.lists[0].Items[0].Subitems.Add(GetMaterial(5, foundationRebarAmount, location, 4, rebarPrice));
+			model.lists[0].Items[0].Subitems.Add(GetMaterial(5, foundationRebarAmount, location, 4, rebarPrice, wastage, provisions, RebarCostID));
 
 			int foundationHollowBlock = (int)Math.Ceiling(foundationNoOfHollowBlock);
-			model.lists[0].Items[0].Subitems.Add(GetMaterial(6, foundationHollowBlock, location, 5, hollowBlockPrice));
+			model.lists[0].Items[0].Subitems.Add(GetMaterial(6, foundationHollowBlock, location, 5, hollowBlockPrice, wastage, provisions, HollowBlockCostID));
 
 			for (int i = 1; i <= model.NumberOfStoreys; i++)
 			{
@@ -542,50 +561,50 @@ namespace Frilou_UI_V2.Controllers
 				;
 
 				int floorConcreteCement = (int)Math.Ceiling(storeyFloorConcrete * cementRatio);
-				model.lists[i].Items[0].Subitems.Add(GetMaterial(2, floorConcreteCement, location, 1, cementPrice));
+				model.lists[i].Items[0].Subitems.Add(GetMaterial(2, floorConcreteCement, location, 1, cementPrice, wastage, provisions, CementCostID));
 
 				int floorConcreteSand = (int)Math.Ceiling(storeyFloorConcrete * sandRatio);
-				model.lists[i].Items[0].Subitems.Add(GetMaterial(3, floorConcreteSand, location, 2, sandPrice));
+				model.lists[i].Items[0].Subitems.Add(GetMaterial(3, floorConcreteSand, location, 2, sandPrice, wastage, provisions, SandCostID));
 
 				int floorConcreteAggregate = (int)Math.Ceiling(storeyFloorConcrete * aggregateRatio);
-				model.lists[i].Items[0].Subitems.Add(GetMaterial(4, floorConcreteAggregate, location, 3, aggregatePrice));
+				model.lists[i].Items[0].Subitems.Add(GetMaterial(4, floorConcreteAggregate, location, 3, aggregatePrice, wastage, provisions,AggregateCostID));
 
 				int floorRebarAmount = (int)Math.Ceiling(storeyFloorRebar);
-				model.lists[i].Items[0].Subitems.Add(GetMaterial(5, floorRebarAmount, location, 4, rebarPrice));
+				model.lists[i].Items[0].Subitems.Add(GetMaterial(5, floorRebarAmount, location, 4, rebarPrice, wastage, provisions, RebarCostID));
 
 
 				//wall
 				int wallConcreteCement = (int)Math.Ceiling(storeyWallConcrete * cementRatio);
-				model.lists[i].Items[1].Subitems.Add(GetMaterial(2, wallConcreteCement, location, 1, cementPrice));
+				model.lists[i].Items[1].Subitems.Add(GetMaterial(2, wallConcreteCement, location, 1, cementPrice, wastage, provisions, CementCostID));
 				int wallConcreteSand = (int)Math.Ceiling(storeyWallConcrete * sandRatio);
-				model.lists[i].Items[1].Subitems.Add(GetMaterial(3, wallConcreteSand, location, 2, sandPrice));
+				model.lists[i].Items[1].Subitems.Add(GetMaterial(3, wallConcreteSand, location, 2, sandPrice, wastage, provisions, SandCostID));
 				int wallConcreteAggregate = (int)Math.Ceiling(storeyWallConcrete * aggregateRatio);
-				model.lists[i].Items[1].Subitems.Add(GetMaterial(4, wallConcreteAggregate, location, 3, aggregatePrice));
+				model.lists[i].Items[1].Subitems.Add(GetMaterial(4, wallConcreteAggregate, location, 3, aggregatePrice, wastage, provisions, AggregateCostID));
 
 				int wallRebarAmount = (int)Math.Ceiling(storeyWallRebar);
-				model.lists[i].Items[1].Subitems.Add(GetMaterial(5, wallRebarAmount, location, 4, rebarPrice));
+				model.lists[i].Items[1].Subitems.Add(GetMaterial(5, wallRebarAmount, location, 4, rebarPrice, wastage, provisions, RebarCostID));
 
 				//beam
 				int beamConcreteCement = (int)Math.Ceiling(storeySupportBeamsConcrete * cementRatio);
-				model.lists[i].Items[2].Subitems.Add(GetMaterial(2, beamConcreteCement, location, 1, cementPrice));
+				model.lists[i].Items[2].Subitems.Add(GetMaterial(2, beamConcreteCement, location, 1, cementPrice, wastage, provisions, CementCostID));
 				int beamConcreteSand = (int)Math.Ceiling(storeySupportBeamsConcrete * sandRatio);
-				model.lists[i].Items[2].Subitems.Add(GetMaterial(3, beamConcreteSand, location, 2, sandPrice));
+				model.lists[i].Items[2].Subitems.Add(GetMaterial(3, beamConcreteSand, location, 2, sandPrice, wastage, provisions, SandCostID));
 				int beamConcreteAggregate = (int)Math.Ceiling(storeySupportBeamsConcrete * aggregateRatio);
-				model.lists[i].Items[2].Subitems.Add(GetMaterial(4, beamConcreteAggregate, location, 3, aggregatePrice));
+				model.lists[i].Items[2].Subitems.Add(GetMaterial(4, beamConcreteAggregate, location, 3, aggregatePrice, wastage, provisions, AggregateCostID));
 
 				int beamRebarAmount = (int)Math.Ceiling(storeySupportBeamsRebar);
-				model.lists[i].Items[2].Subitems.Add(GetMaterial(5, beamRebarAmount, location, 4, rebarPrice));
+				model.lists[i].Items[2].Subitems.Add(GetMaterial(5, beamRebarAmount, location, 4, rebarPrice, wastage, provisions, RebarCostID));
 
 				//stair
 				int stairsConcreteCement = (int)Math.Ceiling(stairsConcrete * cementRatio);
-				model.lists[i].Items[3].Subitems.Add(GetMaterial(2, stairsConcreteCement, location, 1, cementPrice));
+				model.lists[i].Items[3].Subitems.Add(GetMaterial(2, stairsConcreteCement, location, 1, cementPrice, wastage, provisions, CementCostID));
 				int stairsConcreteSand = (int)Math.Ceiling(stairsConcrete * sandRatio);
-				model.lists[i].Items[3].Subitems.Add(GetMaterial(3, stairsConcreteSand, location, 2, sandPrice));
+				model.lists[i].Items[3].Subitems.Add(GetMaterial(3, stairsConcreteSand, location, 2, sandPrice, wastage, provisions, SandCostID));
 				int stairsConcreteAggregate = (int)Math.Ceiling(stairsConcrete * aggregateRatio);
-				model.lists[i].Items[3].Subitems.Add(GetMaterial(4, stairsConcreteAggregate, location, 3, aggregatePrice));
+				model.lists[i].Items[3].Subitems.Add(GetMaterial(4, stairsConcreteAggregate, location, 3, aggregatePrice, wastage, provisions, AggregateCostID));
 
 				int stairsRebarAmount = (int)Math.Ceiling(stairsRebar);
-				model.lists[i].Items[3].Subitems.Add(GetMaterial(5, stairsRebarAmount, location, 4, rebarPrice));
+				model.lists[i].Items[3].Subitems.Add(GetMaterial(5, stairsRebarAmount, location, 4, rebarPrice, wastage, provisions, RebarCostID));
 			}
 
 			model.totalCost = 0;
@@ -608,20 +627,604 @@ namespace Frilou_UI_V2.Controllers
 		public IActionResult BOMAdd()
 		{
 			EmployeeBOMModel model = JsonConvert.DeserializeObject<EmployeeBOMModel>(TempData["BOMGenerateData"].ToString());
+			TempData["BOMGenerateData"] = JsonConvert.SerializeObject(model);
 			return View(model);
 		}
 
-		public IActionResult BOMView()
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
+		public async Task<ActionResult> BOMAdd(EmployeeBOMModel model)
+		{
+			TempData["BOMGenerateData"] = JsonConvert.SerializeObject(model);
+			Debug.WriteLine("boolet");
+			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			{
+				conn.Open();
+				using (MySqlTransaction trans = conn.BeginTransaction())
+				{
+					int bom_id = 0;
+					using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`bom` (`bom_creation_date`, `project_id`, `bom_formula_id`) VALUES ( " +
+						"@bom_creation_date, @project_id, @bom_formula_id);" +
+						" SELECT last_insert_id() FROM `bom_mce_db`.`bom`;"))
+					{
+						command.Parameters.AddWithValue("@bom_creation_date", DateTime.Today.ToString("yyyy-MM-dd"));
+						command.Parameters.AddWithValue("@project_id", (uint)model.ProjectID);
+						command.Parameters.AddWithValue("@bom_formula_id", (uint)model.FormulaID);
+						command.Connection = conn;
+						command.Transaction = trans;
+						bom_id = Convert.ToInt32(command.ExecuteScalar());
+					}
+
+					foreach (Employee_BOM_Materials_Lists list in model.lists)
+					{
+						MySqlCommand command2 = new MySqlCommand(
+							"INSERT INTO `bom_mce_db`.`bom_lists` (`bom_list_desc`,`bom_id`) VALUES " +
+							"(@list_desc," +
+							"@bom_id);" +
+							"SELECT last_insert_id() FROM `bom_mce_db`.`bom_lists`;");
+
+						command2.Parameters.AddWithValue("@list_desc", list.Description);
+						command2.Parameters.AddWithValue("@bom_id", bom_id);
+
+						command2.Connection = conn;
+						command2.Transaction = trans;
+						int bom_list_id = Convert.ToInt32(command2.ExecuteScalar());
+						command2.Dispose();
+						Debug.WriteLine("LIST");
+
+						foreach (Employee_BOM_Materials_Items item in list.Items)
+						{
+							MySqlCommand command3 = new MySqlCommand(
+							"INSERT INTO `bom_mce_db`.`bom_items` (`bom_list_id`,`bom_list_desc`) VALUES " +
+							"(@bom_list_id," +
+							"@bom_list_desc);" +
+							"SELECT last_insert_id() FROM `bom_mce_db`.`bom_items`;");
+
+							command3.Parameters.AddWithValue("@bom_list_id", bom_list_id);
+							command3.Parameters.AddWithValue("@bom_list_desc", item.Description);
+
+							command3.Connection = conn;
+							command3.Transaction = trans;
+							int bom_list_item_id = Convert.ToInt32(command3.ExecuteScalar());
+							command3.Dispose();
+							Debug.WriteLine("ITEM");
+
+							foreach (Employee_BOM_Materials_Subitems subitem in item.Subitems)
+							{
+								MySqlCommand command4 = new MySqlCommand(
+									"INSERT INTO `bom_mce_db`.`bom_subitems` (`material_id`,`bom_subitem_quantity`,`bom_item_id`, `supplier_material_id`) VALUES " +
+									"(@item_id," +
+									"@item_quantity," +
+									"@bom_item_id, " +
+									"@supplier_material_id);");
+
+								command4.Parameters.AddWithValue("@item_id", subitem.MaterialID);
+								command4.Parameters.AddWithValue("@item_quantity", subitem.MaterialQuantity);
+								command4.Parameters.AddWithValue("@bom_item_id", bom_list_item_id);
+								command4.Parameters.AddWithValue("@supplier_material_id", subitem.SupplierMaterialID);
+
+								command4.Connection = conn;
+								command4.Transaction = trans;
+								command4.ExecuteNonQuery();
+								command4.Dispose();
+								Debug.WriteLine("SUBITEM");
+							}
+						}
+					}
+					trans.Commit();
+					Debug.WriteLine("Saved?");
+				}
+			}
+
+			return View(model);
+		}
+
+		public IActionResult BOMView(int? id)
+		{
+			EmployeeBOMModel model = new EmployeeBOMModel();
+			model.templates = new List<Employee_BOM_Template_List>();
+			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			{
+				conn.Open();
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
+					"INNER JOIN template_formula_constants c ON a.bom_formula_id = formula_constants_id " +
+					"INNER JOIN building_types d ON b.building_types_id = d.building_types_id " +
+					"WHERE a.bom_id = @id;"))
+				{
+					
+					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						while (sdr.Read())
+						{
+							model.Title = sdr["project_title"].ToString();
+							model.ClientName = sdr["project_client_name"].ToString();
+							model.ClientContact = sdr["project_client_contact"].ToString();
+							model.Address = sdr["project_address"].ToString();
+							model.City = sdr["project_city"].ToString();
+							model.Region = sdr["project_region"].ToString();
+							model.Country = sdr["project_country"].ToString();
+							model.Date = DateTime.Parse(sdr["project_date"].ToString());
+							model.BuildingType = sdr["description"].ToString();
+							model.NumberOfStoreys = Convert.ToInt32(sdr["project_building_storeys"]);
+							model.FloorHeight = Convert.ToDouble(sdr["project_building_floorheight"]);
+							model.BuildingLength = Convert.ToDouble(sdr["project_building_length"]);
+							model.BuildingWidth = Convert.ToDouble(sdr["project_building_width"]);
+							model.Longtitude = sdr["project_longtitude"].ToString();
+							model.Latitude = sdr["project_latitude"].ToString();
+							model.FormulaID = Convert.ToInt32(sdr["bom_formula_id"]);
+							model.BOMCreationDate = DateTime.Parse(sdr["bom_creation_date"].ToString());
+							model.Wastage = Convert.ToDouble(sdr["wastage"]);
+							model.Provisions = Convert.ToDouble(sdr["provisions"]);
+						}
+					}
+				}
+				model.lists = new List<Employee_BOM_Materials_Lists>();
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
+				{
+					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						int num = 1;
+						while (sdr.Read())
+						{
+							model.lists.Add(new Employee_BOM_Materials_Lists()
+							{
+								Description = sdr["bom_list_desc"].ToString(),
+								ListID = Convert.ToInt32(sdr["bom_list_id"]),
+								ListNumber = num,
+								Items = new List<Employee_BOM_Materials_Items>()
+							});
+							num++;
+						}
+					}
+				}
+				for (int x = 0; x < model.lists.Count; x++)
+				{
+					using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
+					{
+						command.Parameters.AddWithValue("@id", (uint)model.lists[x].ListID);
+						command.Connection = conn;
+						using (MySqlDataReader sdr = command.ExecuteReader())
+						{
+							int num = 1;
+							while (sdr.Read())
+							{
+								model.lists[x].Items.Add(new Employee_BOM_Materials_Items()
+								{
+									Description = sdr["bom_list_desc"].ToString(),
+									ItemID = Convert.ToInt32(sdr["bom_item_id"]),
+									ItemNumber = num,
+									Subitems = new List<Employee_BOM_Materials_Subitems>()
+								});
+								num++;
+							}
+						}
+					}
+					for (int y = 0; y < model.lists[x].Items.Count; y++)
+					{
+						using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_subitems a " +
+							"INNER JOIN materials b ON a.material_id = b.material_id " +
+							"INNER JOIN supplier_materials c ON a.supplier_material_id = c.supplier_material_id " +
+							"INNER JOIN measurement_units d ON b.measurement_unit_id = d.measurement_unit_id " +
+							"INNER JOIN supplier_info e ON e.supplier_id = c.supplier_id " +
+							"WHERE bom_item_id = @id;"))
+						{
+							command.Parameters.AddWithValue("@id", (uint)model.lists[x].Items[y].ItemID);
+							command.Connection = conn;
+							using (MySqlDataReader sdr = command.ExecuteReader())
+							{
+								int num = 1;
+								while (sdr.Read())
+								{
+									model.lists[x].Items[y].Subitems.Add(new Employee_BOM_Materials_Subitems()
+									{
+										SubitemNumber = num,
+										MaterialID = Convert.ToInt32(sdr["material_id"]),
+										MaterialDesc = sdr["material_desc"].ToString(),
+										MaterialUoM = sdr["measurement_unit_desc_short"].ToString(),
+										MaterialQuantity = Convert.ToInt32(sdr["bom_subitem_quantity"]),
+										MaterialQuantityWastage = (int)Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage),
+										MaterialQuantityProvisions = (int)Math.Ceiling(Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage) * model.Provisions),
+										MaterialCost = Convert.ToDouble(sdr["supplier_material_price"]) / 100,
+										MaterialAmount = Math.Round((int)Math.Ceiling(Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage) * model.Provisions) * (Convert.ToDouble(sdr["supplier_material_price"]) / 100), 2),
+										SupplierMaterialID = Convert.ToInt32(sdr["supplier_material_id"]),
+										Supplier = sdr["supplier_desc"].ToString()
+									});
+									num++;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			model.totalCost = 0;
+			foreach (Employee_BOM_Materials_Lists x in model.lists)
+			{
+				foreach (Employee_BOM_Materials_Items y in x.Items)
+				{
+					foreach (Employee_BOM_Materials_Subitems z in y.Subitems)
+					{
+						model.totalCost += (z.MaterialCost * Math.Ceiling((double)z.MaterialQuantity));
+					}
+				}
+			}
+			return View(model);
+		}
+
+		public IActionResult BOMViewClient(int? id)
+		{
+			EmployeeBOMModel model = new EmployeeBOMModel();
+			model.templates = new List<Employee_BOM_Template_List>();
+			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			{
+				conn.Open();
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
+					"INNER JOIN template_formula_constants c ON a.bom_formula_id = formula_constants_id " +
+					"INNER JOIN building_types d ON b.building_types_id = d.building_types_id " +
+					"WHERE a.bom_id = @id;"))
+				{
+
+					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						while (sdr.Read())
+						{
+							model.Title = sdr["project_title"].ToString();
+							model.ClientName = sdr["project_client_name"].ToString();
+							model.ClientContact = sdr["project_client_contact"].ToString();
+							model.Address = sdr["project_address"].ToString();
+							model.City = sdr["project_city"].ToString();
+							model.Region = sdr["project_region"].ToString();
+							model.Country = sdr["project_country"].ToString();
+							model.Date = DateTime.Parse(sdr["project_date"].ToString());
+							model.BuildingType = sdr["description"].ToString();
+							model.NumberOfStoreys = Convert.ToInt32(sdr["project_building_storeys"]);
+							model.FloorHeight = Convert.ToDouble(sdr["project_building_floorheight"]);
+							model.BuildingLength = Convert.ToDouble(sdr["project_building_length"]);
+							model.BuildingWidth = Convert.ToDouble(sdr["project_building_width"]);
+							model.Longtitude = sdr["project_longtitude"].ToString();
+							model.Latitude = sdr["project_latitude"].ToString();
+							model.FormulaID = Convert.ToInt32(sdr["bom_formula_id"]);
+							model.BOMCreationDate = DateTime.Parse(sdr["bom_creation_date"].ToString());
+							model.Wastage = Convert.ToDouble(sdr["wastage"]);
+							model.Provisions = Convert.ToDouble(sdr["provisions"]);
+						}
+					}
+				}
+				model.lists = new List<Employee_BOM_Materials_Lists>();
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
+				{
+					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						int num = 1;
+						while (sdr.Read())
+						{
+							model.lists.Add(new Employee_BOM_Materials_Lists()
+							{
+								Description = sdr["bom_list_desc"].ToString(),
+								ListID = Convert.ToInt32(sdr["bom_list_id"]),
+								ListNumber = num,
+								Items = new List<Employee_BOM_Materials_Items>()
+							});
+							num++;
+						}
+					}
+				}
+				for (int x = 0; x < model.lists.Count; x++)
+				{
+					using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
+					{
+						command.Parameters.AddWithValue("@id", (uint)model.lists[x].ListID);
+						command.Connection = conn;
+						using (MySqlDataReader sdr = command.ExecuteReader())
+						{
+							int num = 1;
+							while (sdr.Read())
+							{
+								model.lists[x].Items.Add(new Employee_BOM_Materials_Items()
+								{
+									Description = sdr["bom_list_desc"].ToString(),
+									ItemID = Convert.ToInt32(sdr["bom_item_id"]),
+									ItemNumber = num,
+									Subitems = new List<Employee_BOM_Materials_Subitems>()
+								});
+								num++;
+							}
+						}
+					}
+					for (int y = 0; y < model.lists[x].Items.Count; y++)
+					{
+						using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_subitems a " +
+							"INNER JOIN materials b ON a.material_id = b.material_id " +
+							"INNER JOIN supplier_materials c ON a.supplier_material_id = c.supplier_material_id " +
+							"INNER JOIN measurement_units d ON b.measurement_unit_id = d.measurement_unit_id " +
+							"INNER JOIN supplier_info e ON e.supplier_id = c.supplier_id " +
+							"WHERE bom_item_id = @id;"))
+						{
+							command.Parameters.AddWithValue("@id", (uint)model.lists[x].Items[y].ItemID);
+							command.Connection = conn;
+							using (MySqlDataReader sdr = command.ExecuteReader())
+							{
+								int num = 1;
+								while (sdr.Read())
+								{
+									model.lists[x].Items[y].Subitems.Add(new Employee_BOM_Materials_Subitems()
+									{
+										SubitemNumber = num,
+										MaterialID = Convert.ToInt32(sdr["material_id"]),
+										MaterialDesc = sdr["material_desc"].ToString(),
+										MaterialUoM = sdr["measurement_unit_desc_short"].ToString(),
+										MaterialQuantity = Convert.ToInt32(sdr["bom_subitem_quantity"]),
+										MaterialQuantityWastage = (int)Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage),
+										MaterialQuantityProvisions = (int)Math.Ceiling(Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage) * model.Provisions),
+										MaterialCost = Convert.ToDouble(sdr["supplier_material_price"]) / 100,
+										MaterialAmount = Math.Round((int)Math.Ceiling(Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage) * model.Provisions) * (Convert.ToDouble(sdr["supplier_material_price"]) / 100), 2),
+										SupplierMaterialID = Convert.ToInt32(sdr["supplier_material_id"]),
+										Supplier = sdr["supplier_desc"].ToString()
+									});
+									num++;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			model.totalCost = 0;
+			foreach (Employee_BOM_Materials_Lists x in model.lists)
+			{
+				foreach (Employee_BOM_Materials_Items y in x.Items)
+				{
+					foreach (Employee_BOM_Materials_Subitems z in y.Subitems)
+					{
+						model.totalCost += (z.MaterialCost * Math.Ceiling((double)z.MaterialQuantity));
+					}
+				}
+			}
+			return View(model);
+		}
+
+		public IActionResult BOMList()
+		{
+			List<Employee_BOM_List_Item> projects = new List<Employee_BOM_List_Item>();
+
+			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			{
+				conn.Open();
+				using (MySqlCommand command = new MySqlCommand("SELECT *, c.mce_id IS NOT NULL AS HasReference FROM bom a " +
+					"INNER JOIN projects b ON a.project_id = b.project_id " +
+					"LEFT JOIN mce c ON a.bom_id = c.bom_id " +
+					"WHERE b.project_engineer_id = @project_engineer_id;"))
+				{
+					command.Parameters.AddWithValue("@project_engineer_id", HttpContext.Session.GetInt32("EmployeeID"));
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						while (sdr.Read())
+						{
+							projects.Add(new Employee_BOM_List_Item()
+							{
+								ID = Convert.ToInt32(sdr["bom_id"]),
+								Title = sdr["project_title"].ToString(),
+								ClientName = sdr["project_client_name"].ToString(),
+								Date = DateTime.Parse(sdr["bom_creation_date"].ToString()),
+								MCEExists = Convert.ToBoolean(sdr["HasReference"])
+							});
+						}
+					}
+				}
+			}
+			return View(projects);
+		}
+
+		public IActionResult ToMCEAdd(int? id)
+		{
+			EmployeeBOMModel model = new EmployeeBOMModel();
+			model.templates = new List<Employee_BOM_Template_List>();
+			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			{
+				conn.Open();
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
+					"INNER JOIN template_formula_constants c ON a.bom_formula_id = formula_constants_id " +
+					"INNER JOIN building_types d ON b.building_types_id = d.building_types_id " +
+					"WHERE a.bom_id = @id;"))
+				{
+
+					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						while (sdr.Read())
+						{
+							model.Title = sdr["project_title"].ToString();
+							model.ClientName = sdr["project_client_name"].ToString();
+							model.ClientContact = sdr["project_client_contact"].ToString();
+							model.Address = sdr["project_address"].ToString();
+							model.City = sdr["project_city"].ToString();
+							model.Region = sdr["project_region"].ToString();
+							model.Country = sdr["project_country"].ToString();
+							model.Date = DateTime.Parse(sdr["project_date"].ToString());
+							model.BuildingType = sdr["description"].ToString();
+							model.NumberOfStoreys = Convert.ToInt32(sdr["project_building_storeys"]);
+							model.FloorHeight = Convert.ToDouble(sdr["project_building_floorheight"]);
+							model.BuildingLength = Convert.ToDouble(sdr["project_building_length"]);
+							model.BuildingWidth = Convert.ToDouble(sdr["project_building_width"]);
+							model.Longtitude = sdr["project_longtitude"].ToString();
+							model.Latitude = sdr["project_latitude"].ToString();
+							model.FormulaID = Convert.ToInt32(sdr["bom_formula_id"]);
+							model.BOMCreationDate = DateTime.Parse(sdr["bom_creation_date"].ToString());
+							model.Wastage = Convert.ToDouble(sdr["wastage"]);
+							model.Provisions = Convert.ToDouble(sdr["provisions"]);
+							model.ProjectID = Convert.ToInt32(sdr["project_id"]);
+						}
+					}
+				}
+				model.lists = new List<Employee_BOM_Materials_Lists>();
+				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
+				{
+					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Connection = conn;
+					using (MySqlDataReader sdr = command.ExecuteReader())
+					{
+						int num = 1;
+						while (sdr.Read())
+						{
+							model.lists.Add(new Employee_BOM_Materials_Lists()
+							{
+								Description = sdr["bom_list_desc"].ToString(),
+								ListID = Convert.ToInt32(sdr["bom_list_id"]),
+								ListNumber = num,
+								Items = new List<Employee_BOM_Materials_Items>()
+							});
+							num++;
+						}
+					}
+				}
+				for (int x = 0; x < model.lists.Count; x++)
+				{
+					using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
+					{
+						command.Parameters.AddWithValue("@id", (uint)model.lists[x].ListID);
+						command.Connection = conn;
+						using (MySqlDataReader sdr = command.ExecuteReader())
+						{
+							int num = 1;
+							while (sdr.Read())
+							{
+								model.lists[x].Items.Add(new Employee_BOM_Materials_Items()
+								{
+									Description = sdr["bom_list_desc"].ToString(),
+									ItemID = Convert.ToInt32(sdr["bom_item_id"]),
+									ItemNumber = num,
+									Subitems = new List<Employee_BOM_Materials_Subitems>()
+								});
+								num++;
+							}
+						}
+					}
+					for (int y = 0; y < model.lists[x].Items.Count; y++)
+					{
+						using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_subitems a " +
+							"INNER JOIN materials b ON a.material_id = b.material_id " +
+							"INNER JOIN supplier_materials c ON a.supplier_material_id = c.supplier_material_id " +
+							"INNER JOIN measurement_units d ON b.measurement_unit_id = d.measurement_unit_id " +
+							"INNER JOIN supplier_info e ON e.supplier_id = c.supplier_id " +
+							"WHERE bom_item_id = @id;"))
+						{
+							command.Parameters.AddWithValue("@id", (uint)model.lists[x].Items[y].ItemID);
+							command.Connection = conn;
+							using (MySqlDataReader sdr = command.ExecuteReader())
+							{
+								int num = 1;
+								while (sdr.Read())
+								{
+									model.lists[x].Items[y].Subitems.Add(new Employee_BOM_Materials_Subitems()
+									{
+										SubitemNumber = num,
+										MaterialID = Convert.ToInt32(sdr["material_id"]),
+										MaterialDesc = sdr["material_desc"].ToString(),
+										MaterialUoM = sdr["measurement_unit_desc_short"].ToString(),
+										MaterialQuantity = Convert.ToInt32(sdr["bom_subitem_quantity"]),
+										MaterialQuantityWastage = (int)Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage),
+										MaterialQuantityProvisions = (int)Math.Ceiling(Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage) * model.Provisions),
+										MaterialCost = Convert.ToDouble(sdr["supplier_material_price"]) / 100,
+										MaterialAmount = Math.Round((int)Math.Ceiling(Math.Ceiling(Convert.ToInt32(sdr["bom_subitem_quantity"]) * model.Wastage) * model.Provisions) * (Convert.ToDouble(sdr["supplier_material_price"]) / 100), 2),
+										SupplierMaterialID = Convert.ToInt32(sdr["supplier_material_id"]),
+										Supplier = sdr["supplier_desc"].ToString()
+									});
+									num++;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			model.totalCost = 0;
+			foreach (Employee_BOM_Materials_Lists x in model.lists)
+			{
+				foreach (Employee_BOM_Materials_Items y in x.Items)
+				{
+					foreach (Employee_BOM_Materials_Subitems z in y.Subitems)
+					{
+						model.totalCost += (z.MaterialCost * Math.Ceiling((double)z.MaterialQuantity));
+					}
+				}
+			}
+
+			TempData["MCEData"] = JsonConvert.SerializeObject(model);
+			return RedirectToAction("MCEAdd");
+		}
+
+		public IActionResult MCEAdd()
 		{
 
-			return View();
+			EmployeeBOMModel model = JsonConvert.DeserializeObject<EmployeeBOMModel>(TempData["MCEData"].ToString());
+			return View(model);
+		}
+
+		[HttpPost]
+		[AllowAnonymous]
+		public async Task<IActionResult> MCEAdd(EmployeeBOMModel model, string submitButton)
+		{
+			Debug.WriteLine(model == null);
+			Debug.WriteLine("Menshevik");
+			Debug.WriteLine(model.ProjectID);
+			
+			if (submitButton == "Update")
+			{
+				for (int x = 0; x < model.lists.Count; x++)
+				{
+					for (int y = 0; y < model.lists[x].Items.Count; y++)
+					{
+						for (int z = 0; z < model.lists[x].Items[y].Subitems.Count; z++)
+						{
+							Debug.WriteLine("Bolshevik");
+							model.lists[x].Items[y].Subitems[z].TotalUnitRate =
+								model.lists[x].Items[y].Subitems[z].MaterialCost +
+								model.lists[x].Items[y].Subitems[z].LabourCost;
+							model.lists[x].Items[y].Subitems[z].MaterialAmount =
+								model.lists[x].Items[y].Subitems[z].TotalUnitRate *
+								model.lists[x].Items[y].Subitems[z].MaterialQuantityProvisions;
+						}
+					}
+				}
+
+				model.totalCost = 0;
+				foreach (Employee_BOM_Materials_Lists x in model.lists)
+				{
+					foreach (Employee_BOM_Materials_Items y in x.Items)
+					{
+						foreach (Employee_BOM_Materials_Subitems z in y.Subitems)
+						{
+							model.totalCost += (z.TotalUnitRate * Math.Ceiling((double)z.MaterialQuantityProvisions));
+						}
+					}
+				}
+				return View(model);
+			}
+			else if (submitButton == "Submit")
+			{
+
+				return View(model);
+			}
+			
+			return View(model);
 		}
 
 
 
 
 
-		public Employee_BOM_Materials_Subitems GetMaterial(int material_id, double Quantity, string destination, int subitem_num, double cost, double wastage, double provisions)
+		public Employee_BOM_Materials_Subitems GetMaterial(int material_id, double Quantity, string destination, int subitem_num, double cost, double wastage, double provisions, uint SupplierMaterialID)
 		{
 			Employee_BOM_Materials_Subitems item = new Employee_BOM_Materials_Subitems();
 			using (MySqlConnection conn = new MySqlConnection(connectionstring))
@@ -647,6 +1250,7 @@ namespace Frilou_UI_V2.Controllers
 							item.MaterialQuantityProvisions = (int)Math.Ceiling(Math.Ceiling(Math.Ceiling(Quantity) * wastage)*provisions);
 							item.MaterialCost = cost;
 							item.MaterialAmount = Math.Ceiling(Math.Ceiling(Math.Ceiling(Quantity) * wastage) * provisions) * cost;
+							item.SupplierMaterialID = SupplierMaterialID;
 						}
 					}
 				}
@@ -662,18 +1266,19 @@ namespace Frilou_UI_V2.Controllers
 			using (MySqlConnection conn = new MySqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT c.material_id AS MaterialID, c.material_desc_long AS Material, " +
-					"a.supplier_material_price AS Price, d.supplier_id AS SupplierID, d.supplier_desc AS Supplier, " +
+				using (MySqlCommand command = new MySqlCommand("SELECT c.material_id AS MaterialID, c.material_desc_long AS Material, a.supplier_material_id AS SupplierMaterialID, " +
+					"a.supplier_material_price AS Price, d.supplier_id AS SupplierID, d.supplier_desc AS Supplier, d.employee_id AS Employee, " +
 					"CONCAT(d.supplier_coordinates_latitude, ',', d.supplier_coordinates_longtitude) AS Coordinates " +
 					"FROM supplier_materials a JOIN (" +
-					"SELECT MIN(b.supplier_material_price) AS min_value FROM supplier_materials b WHERE b.material_id = @id AND b.supplier_material_availability = 1) min_table " +
+					"SELECT MIN(b.supplier_material_price) AS min_value FROM supplier_materials b WHERE b.material_id = @id AND b.supplier_material_availability = 1  AND b.supplier_material_archived = false) min_table " +
 					"ON a.supplier_material_price = min_table.min_value " +
 					"INNER JOIN materials c ON a.material_id = c.material_id " +
 					"INNER JOIN supplier_info d ON a.supplier_id = d.supplier_id " +
-					"WHERE a.material_id = @id " +
-					"AND a.supplier_material_availability = 1;"))
+					"WHERE a.material_id = @id AND d.employee_id = @employee_id  " +
+					"AND a.supplier_material_availability = 1 AND a.supplier_material_archived = false ;"))
 				{
 					command.Parameters.AddWithValue("@id", MaterialID);
+					command.Parameters.AddWithValue("@employee_id", (int)HttpContext.Session.GetInt32("EmployeeID"));
 					command.Connection = conn;
 					using (MySqlDataReader sdr = command.ExecuteReader())
 					{
@@ -686,7 +1291,8 @@ namespace Frilou_UI_V2.Controllers
 								Price = Convert.ToDouble(sdr["Price"]) / 100,
 								SupplierID = Convert.ToUInt32(sdr["SupplierID"]),
 								SupplierDesc = sdr["Supplier"].ToString(),
-								SupplierCoords = sdr["Coordinates"].ToString()
+								SupplierCoords = sdr["Coordinates"].ToString(),
+								SupplierMaterialID = Convert.ToUInt32(sdr["SupplierMaterialID"])
 							});
 
 						}

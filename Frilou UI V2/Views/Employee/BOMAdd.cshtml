@@ -30,8 +30,10 @@
 		<p>Building Length: @Model.BuildingLength</p>
 		<p>Building Width: @Model.BuildingWidth</p>
 		<p>Template ID: @Model.TemplateID</p>
+		<p>Lon: @Model.Longtitude</p>
+		<p>Lat: @Model.Latitude</p>
 	</div>
-	@using (Html.BeginForm("BOMGenerate", "Employee", FormMethod.Post))
+	@using (Html.BeginForm("BOMAdd", "Employee", FormMethod.Post))
 	{
 
 		<div style="display: none">
@@ -42,6 +44,42 @@
 				@Html.EditorFor(m=>m.templates[x].ID)
 				@Html.EditorFor(m=>m.templates[x].Description)
 			}
+			@Html.EditorFor(m=>m.lists)
+
+			@for (int i = 0; i < Model.lists.Count; i++)
+			{
+				@Html.EditorFor(m=>m.lists[i])
+				@Html.EditorFor(m=>m.lists[i].Description)
+				@Html.EditorFor(m=>m.lists[i].ListNumber)
+				@Html.EditorFor(m=>m.lists[i].ListLetter)
+				@Html.EditorFor(m=>m.lists[i].Items)
+
+				@for (int x = 0; x < Model.lists[i].Items.Count; x++)
+				{
+
+					@Html.EditorFor(m=>m.lists[i].Items[x])
+					@Html.EditorFor(m=>m.lists[i].Items[x].ItemNumber)
+					@Html.EditorFor(m=>m.lists[i].Items[x].Description)
+					@Html.EditorFor(m=>m.lists[i].Items[x].Subitems)
+
+					@for (int y = 0; y < Model.lists[i].Items[x].Subitems.Count; y++)
+					{
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y])
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].SubitemNumber)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialID)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialDesc)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialQuantity)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialQuantityWastage)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialQuantityProvisions)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialUoM)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialCost)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].MaterialAmount)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].LabourCost)
+						@Html.EditorFor(m=>m.lists[i].Items[x].Subitems[y].TotalUnitRate)
+					}
+				}
+			}
+
 			@Html.EditorFor(m=>m.Title)
 			@Html.EditorFor(m=>m.ClientName)
 			@Html.EditorFor(m=>m.ClientContact)
@@ -57,15 +95,67 @@
 			@Html.EditorFor(m=>m.FloorHeight)
 			@Html.EditorFor(m=>m.BuildingLength)
 			@Html.EditorFor(m=>m.BuildingWidth)
+			@Html.EditorFor(m=>m.TemplateID)
+			@Html.EditorFor(m=>m.ProjectID)
+			@Html.EditorFor(m=>m.FormulaID)
 		</div>
 
-		<div class="form-group">
-			@Html.LabelFor(m => m.TemplateID, new { @class = "control-label" })
-			<div class="col-md-10">
-				@Html.DropDownListFor(m => m.TemplateID, new SelectList(Model.templates, "ID", "Description"), "Select a category")
-				@Html.ValidationMessageFor(m => m.TemplateID, "Choose a template", new { @class = "text-danger"})
-			</div>
-		</div>
+
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th colspan="5">Proposed Materials</th>
+					<th colspan="2">Cost Estimate</th>
+				</tr>
+				<tr>
+					<th>Item No.</th>
+					<th>Material Name</th>
+					<th>Quantity</th>
+					<th>With Wastage</th>
+					<th>With Wastage + Provisions</th>
+					<th>UoM</th>
+					<th>Cost per unit</th>
+					<th>Total Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (int x = 0; x < Model.lists.Count; x++)
+				{
+					<tr style="background: #BBBBBB">
+						<td>
+						</td>
+						<td colspan="7">@Model.lists[x].Description</td>
+					</tr>
+					@for (int y = 0; y < Model.lists[x].Items.Count; y++)
+					{
+						<tr style="background: #EEEEEE">
+							<td>@Model.lists[x].Items[y].ItemNumber</td>
+							<td colspan="7">@Model.lists[x].Items[y].Description</td>
+						</tr>
+						@for (int z = 0; z < Model.lists[x].Items[y].Subitems.Count; z++)
+						{
+							{
+								<tr>
+									<td>@Model.lists[x].Items[y].Subitems[z].SubitemNumber</td>
+									<td>@Model.lists[x].Items[y].Subitems[z].MaterialDesc</td>
+									<td>@Model.lists[x].Items[y].Subitems[z].MaterialQuantity</td>
+									<td>@Model.lists[x].Items[y].Subitems[z].MaterialQuantityWastage</td>
+									<td>@Model.lists[x].Items[y].Subitems[z].MaterialQuantityProvisions</td>
+									<td>@Model.lists[x].Items[y].Subitems[z].MaterialUoM</td>
+									<td>@string.Format("{0:N2}", Model.lists[x].Items[y].Subitems[z].MaterialCost)</td>
+									<td>@string.Format("{0:N2}", Model.lists[x].Items[y].Subitems[z].MaterialAmount)</td>
+								</tr>
+							}
+						}
+					}
+				}
+				<tr style="background: #BBBBBB">
+					<td colspan="7" style="text-align:right">Amount:</td>
+					<td>@string.Format("{0:N2}", Model.totalCost)</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<input type="submit" name="Continue" value="Continue" class="button button2" />
 	}

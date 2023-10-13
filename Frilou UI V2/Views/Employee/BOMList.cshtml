@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<Employee_BOM_List_Item>
+
+<head>
+
+</head>
+
+<body>
+	
+	@if (Model != null || Model.Count != 0)
+	{
+		foreach (Employee_BOM_List_Item x in Model)
+		{
+			<div class="cards">
+				<p>Title: @x.Title</p>
+				<p>Client: @x.ClientName</p>
+				<p>Date created: @x.Date</p>
+				<span>@Html.ActionLink("Contractor View", "BOMView", "Employee", new { id = x.ID })</span> || <span>@Html.ActionLink("Client View", "BOMViewClient", "Employee", new { id = x.ID })</span>
+				@if (x.MCEExists == false)
+				{
+					<p>@Html.ActionLink("Create MCE", "ToMCEAdd", "Employee", new { id = x.ID })</p>
+				}
+				else
+				{
+					<p>@Html.ActionLink("View MCE", "ToMCEView", "Employee", new { id = x.ID })</p>
+				}
+			</div>
+		}
+	}
+	else if (Model.Count == 0)
+	{
+		<h2 style="text-align:center;">No BOMs yet</h2>
+	}
+
+</body>

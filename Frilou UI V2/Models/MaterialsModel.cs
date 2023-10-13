@@ -166,6 +166,7 @@ namespace Frilou_UI_V2.Models
 		public uint SupplierID { get; set; }
 		public string SupplierDesc { get; set; }
 		public string SupplierCoords { get; set; }
+		public uint SupplierMaterialID { get; set; }
 		public double Distance { get; set; }
 	}
 
