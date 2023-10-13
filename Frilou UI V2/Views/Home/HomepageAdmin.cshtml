@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/HomepageAdmin.css" asp-append-version="true" />
+
+    <!-- NEW -->
+    <link rel="icon" type="images/png" href="images/green asia logo.png" />
+</head>
+<body>
+    <header class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="logos">
+                <img src="../../Images/green_asia_banner-removebg-preview.png" alt="logo"></a>
+            </div>
+            <nav class="menu">
+                <ul class="text-white list-unstyled mb-0">
+                    <li class="active">Hello, Admin</li>
+                    <li class="active"><a href="LogIn.cshtml">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <!-- Project Form -->
+            <div class="scrollable-container">
+                <form id="projectForm" class="Project_form">
+                    <div class="form-group">
+                        <h4>Projects</h4>
+                        <div class="project-grid">
+                            <a class="box a" href="some_link">Project 1</a>
+                            <a class="box b" href="some_link">Project 2</a>
+                            <a class="box c" href="some_link">Project 3</a>
+                            <a class="box d" href="some_link">Project 4</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <a class="btn add-project" href="add project.html"><button class="btn btn-primary" type="submit">Add Project</button></a>
+            <button class="btn btn-primary" type="submit">Edit Project</button>
+
+
+            <!-- Contractor Form -->
+            <div class="scrollable-container">
+                <form id="projectForm" class="Project_form">
+                    <div class="form-group">
+                        <h4>Contractor</h4>
+                        <div class="project-grid">
+                            <a class="box a" href="some_link">Contractor A</a>
+                            <a class="box b" href="some_link">Contractor B</a>
+                            <a class="box c" href="some_link">Contractor C</a>
+                            <a class="box d" href="some_link">Contractor D</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <a class="btn add-contractor" href="add contractor.html"><button class="btn btn-primary" type="submit">Add Contractor</button></a>
+            <button class="btn btn-primary" type="submit">Remove Contractor</button>
+        </div>
+        </div>
+    </main>
+
+</body>
+</html>
