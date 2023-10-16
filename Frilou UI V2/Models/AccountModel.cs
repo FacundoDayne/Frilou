@@ -451,7 +451,7 @@ namespace Frilou_UI_V2.Models
 	public class BOMSubitems
 	{
 		public int? id { get; set; }
-		public uint item_id { get; set; }
+		public int item_id { get; set; }
 		public string subitem_desc { get; set; }
 		public string subitem_cost { get; set; }
 		public string Supplier { get; set; }
@@ -462,7 +462,7 @@ namespace Frilou_UI_V2.Models
 	public class BOMItems
 	{
 		public int? id { get; set; }
-		public uint item_id { get; set; }
+		public int item_id { get; set; }
 		public string item_desc { get; set; }
 		public IList<BOMSubitems> subitems { get; set; }
 	}
@@ -527,10 +527,10 @@ namespace Frilou_UI_V2.Models
 		[Display(Name = "Project Ref")]
 		public string ProjectRef { get; set; }
 
-		public uint? Engineer_ID { get; set; }
+		public int? Engineer_ID { get; set; }
 
 		[Display(Name = "Project ID")]
-		public uint? ID { get; set; }
+		public int? ID { get; set; }
 
 
 		[Display(Name = "Nomber of Storeys")]
@@ -597,9 +597,9 @@ namespace Frilou_UI_V2.Models
 		public string material_id_string { get; set; }
 		public string material_desc { get; set; }
 		public string material_long_desc { get; set; }
-		public uint unit_id { get; set; }
-		public uint category_id { get; set; }
-		public uint manufacturer_id { get; set; }
+		public int unit_id { get; set; }
+		public int category_id { get; set; }
+		public int manufacturer_id { get; set; }
 		public double price { get; set; }
 		public double? length { get; set; }
 		public double? width { get; set; }
@@ -650,8 +650,8 @@ namespace Frilou_UI_V2.Models
 
 		public IList<MCEList>? lists { get; set; }
 
-		public uint MCE_ID { get; set; }
-		public uint BOM_ID { get; set; }
+		public int MCE_ID { get; set; }
+		public int BOM_ID { get; set; }
 
 		public string? buildingMaterial { get; set; }
 	}
@@ -666,7 +666,7 @@ namespace Frilou_UI_V2.Models
 	public class MCEItem
 	{
 		public int? id { get; set; }
-		public uint item_id { get; set; }
+		public int item_id { get; set; }
 		public string item_desc { get; set; }
 		public IList<MCESubitem> subitems { get; set; }
 	}
@@ -674,7 +674,7 @@ namespace Frilou_UI_V2.Models
 	public class MCESubitem
 	{
 		public int? id { get; set; }
-		public uint item_id { get; set; }
+		public int item_id { get; set; }
 		public string uom_desc { get; set; }
 		public string subitem_desc { get; set; }
 		public string subitem_cost { get; set; }
@@ -682,7 +682,7 @@ namespace Frilou_UI_V2.Models
 		public string Quantity { get; set; }
 		public string Amount { get; set; }
 
-		public uint bom_tem_id { get; set; }
+		public int bom_tem_id { get; set; }
 	}
 
 

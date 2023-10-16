@@ -68,7 +68,7 @@ namespace Frilou_UI_V2.Models
 		[Required]
 		[Range(0, 1000000000)]
 		[Display(Name = "ID")]
-		public uint ID { get; set; }
+		public int ID { get; set; }
 
 		[Required]
 		[StringLength(100, MinimumLength = 1)]
@@ -104,7 +104,7 @@ namespace Frilou_UI_V2.Models
 
 	public class MaterialsEditViewItem
 	{
-		public uint ID { get; set; }
+		public int ID { get; set; }
 		public string Description { get; set; }
 	}
 
@@ -120,8 +120,8 @@ namespace Frilou_UI_V2.Models
 		public bool IsAvailable { get; set; }
 		public bool PreviousIsAvailable { get; set; }
 
-		public uint ID { get; set; }
-		public uint MaterialID { get; set; }
+		public int ID { get; set; }
+		public int MaterialID { get; set; }
 
 		public string Description_Long { get; set; }
 		public string MeasurementString { get; set; }
@@ -147,26 +147,26 @@ namespace Frilou_UI_V2.Models
 
 	public class MaterialsListModel
 	{
-		public uint ID { get; set; }
+		public int ID { get; set; }
 		public string Description { get; set; }
 		public string Description_Long { get; set; }
-		public uint Category_ID { get; set; }
+		public int Category_ID { get; set; }
 		public string Category_Desc { get; set; }
-		public uint UoM_ID { get; set; }
+		public int UoM_ID { get; set; }
 		public string UoM_Desc { get; set; }
-		public uint MeasurementType { get; set; }
+		public int MeasurementType { get; set; }
 		public double MeasurementValue { get; set; }
 	}
 
 	public class MaterialsCostComparisonItem
 	{
-		public uint MaterialID { get; set; }
+		public int MaterialID { get; set; }
 		public string Description_Long { get; set; }
 		public double Price { get; set; }
-		public uint SupplierID { get; set; }
+		public int SupplierID { get; set; }
 		public string SupplierDesc { get; set; }
 		public string SupplierCoords { get; set; }
-		public uint SupplierMaterialID { get; set; }
+		public int SupplierMaterialID { get; set; }
 		public double Distance { get; set; }
 	}
 

@@ -32,7 +32,7 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 5);
 }
 
 .logo {
@@ -56,20 +56,16 @@ body {
     transition: 0.3s ease-in-out;
 }
 
-.menu a:hover {
-    color: #147502;
-}
-
-ul li.active a {
-    color: #73d419;
-}
+    .menu a:hover {
+        color: #ff7200;
+    }
 
 
 
 main {
     flex: 1;
-    padding-top: 10px;
-
+    padding: 0px;
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the maximum height */
 }
 
 footer {
@@ -187,7 +183,7 @@ th {
     color: black;
 }
 
-.partnersAction .productsAction .employeeAction{
+.partnersAction .productsAction {
     display: inline-flex;
 }
 

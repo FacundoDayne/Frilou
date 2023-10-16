@@ -14,6 +14,13 @@ namespace Frilou_UI_V2.Models
 		public List<EmployeeNewProject> projects { get; set; }
 	}
 
+	public class TemplateMaterial
+	{
+		public int ID { get; set; }
+		public string Name { get; set; }
+		public bool Checked { get; set; }
+	}
+
 	public class NewTemplateModel
 	{
 		[Display(Name = "Name")]
@@ -21,55 +28,78 @@ namespace Frilou_UI_V2.Models
 		[Display(Name = "Description")]
 		public string Long_Description { get; set; }
 
-		[Display(Name = "Floor Thickness")]
+		public List<TemplateMaterial> materials { get; set; }
+
+		[Display(Name = "Number of Storeys")]
+		[Range(1, 1000000000)]
+		public int NumberOfStoreys { get; set; }
+
+		[Display(Name = "Height of floors (m)")]
+		[Range(1, 1000000000)]
+		public double FloorHeight { get; set; }
+
+		[Display(Name = "Building Length (m)")]
+		[Range(1, 1000000000)]
+		public double BuildingLength { get; set; }
+
+		[Display(Name = "Building Width (m)")]
+		[Range(1, 1000000000)]
+		public double BuildingWidth { get; set; }
+
+
+
+		[Display(Name = "Floor Thickness (m)")]
 		public double floorThickness { get; set; }
 
-		[Display(Name = "Wall Thickness")]
+		[Display(Name = "Wall Thickness (m)")]
 		public double wallThickness { get; set; }
 
-		[Display(Name = "Rebar diameter")]
+		[Display(Name = "Rebar diameter (m)")]
 		public double rebarDiameter { get; set; }
 
-		[Display(Name = "Nail constant")]
+		[Display(Name = "Nail constant (m)")]
 		public double nailConstant { get; set; }
 
-		[Display(Name = "Hollow block constant")]
+		[Display(Name = "Hollow block constant (m)")]
 		public double hollowBlockConstant { get; set; }
 
-		[Display(Name = "Support beam length")]
+		[Display(Name = "Support beam length (m)")]
 		public double supportBeamLength { get; set; }
 
-		[Display(Name = "Support beam width")]
+		[Display(Name = "Support beam width (m)")]
 		public double supportBeamWidth { get; set; }
 
-		[Display(Name = "Support beam interval")]
+		[Display(Name = "Support beam interval (m)")]
 		public double supportBeamSpace { get; set; }
 
-		[Display(Name = "Concrete Cement Ratio")]
+		[Display(Name = "Concrete Cement Ratio (m)")]
 		public double concreteRatioCement { get; set; }
 
-		[Display(Name = "Concrete Sand Ratio")]
+		[Display(Name = "Concrete Sand Ratio (m)")]
 		public double concreteRatioSand { get; set; }
 
-		[Display(Name = "Concrete Aggregate Ratio")]
+		[Display(Name = "Concrete Aggregate Ratio (m)")]
 		public double concreteRatioAggregate { get; set; }
 
-		[Display(Name = "Plywood Length")]
+		[Display(Name = "Plywood Length (inch)")]
 		public double plywoodLength { get; set; }
 
-		[Display(Name = "Plywood Width")]
+		[Display(Name = "Plywood Width (inch)")]
 		public double plywoodWidth { get; set; }
 
-		[Display(Name = "Stairs riser height")]
+		[Display(Name = "Stairs riser height (m)")]
 		public double riserHeight { get; set; }
 
-		[Display(Name = "Stairs thread depth")]
+		[Display(Name = "Stairs thread depth (m)")]
 		public double threadDepth { get; set; }
 
-		[Display(Name = "Wastage")]
+		[Display(Name = "Stairs width (m)")]
+		public double stairsWidth { get; set; }
+
+		[Display(Name = "Wastage (%)")]
 		public double wasteage { get; set; }
 
-		[Display(Name = "Provisions")]
+		[Display(Name = "Provisions (%)")]
 		public double provisions { get; set; }
 	}
 	public class TemplateListItem
@@ -87,55 +117,79 @@ namespace Frilou_UI_V2.Models
 		[Display(Name = "Description")]
 		public string Long_Description { get; set; }
 
-		[Display(Name = "Floor Thickness")]
+		public List<TemplateMaterial> materials { get; set; }
+
+
+		[Display(Name = "Number of Storeys")]
+		[Range(1, 1000000000)]
+		public int NumberOfStoreys { get; set; }
+
+		[Display(Name = "Height of floors (m)")]
+		[Range(1, 1000000000)]
+		public double FloorHeight { get; set; }
+
+		[Display(Name = "Building Length (m)")]
+		[Range(1, 1000000000)]
+		public double BuildingLength { get; set; }
+
+		[Display(Name = "Building Width (m)")]
+		[Range(1, 1000000000)]
+		public double BuildingWidth { get; set; }
+
+
+
+		[Display(Name = "Floor Thickness (m)")]
 		public double floorThickness { get; set; }
 
-		[Display(Name = "Wall Thickness")]
+		[Display(Name = "Wall Thickness (m)")]
 		public double wallThickness { get; set; }
 
-		[Display(Name = "Rebar diameter")]
+		[Display(Name = "Rebar diameter (m)")]
 		public double rebarDiameter { get; set; }
 
-		[Display(Name = "Nail constant")]
+		[Display(Name = "Nail constant (m)")]
 		public double nailConstant { get; set; }
 
-		[Display(Name = "Hollow block constant")]
+		[Display(Name = "Hollow block constant (m)")]
 		public double hollowBlockConstant { get; set; }
 
-		[Display(Name = "Support beam length")]
+		[Display(Name = "Support beam length (m)")]
 		public double supportBeamLength { get; set; }
 
-		[Display(Name = "Support beam width")]
+		[Display(Name = "Support beam width (m)")]
 		public double supportBeamWidth { get; set; }
 
-		[Display(Name = "Support beam interval")]
+		[Display(Name = "Support beam interval (m)")]
 		public double supportBeamSpace { get; set; }
 
-		[Display(Name = "Concrete Cement Ratio")]
+		[Display(Name = "Concrete Cement Ratio (m)")]
 		public double concreteRatioCement { get; set; }
 
-		[Display(Name = "Concrete Sand Ratio")]
+		[Display(Name = "Concrete Sand Ratio (m)")]
 		public double concreteRatioSand { get; set; }
 
-		[Display(Name = "Concrete Aggregate Ratio")]
+		[Display(Name = "Concrete Aggregate Ratio (m)")]
 		public double concreteRatioAggregate { get; set; }
 
-		[Display(Name = "Plywood Length")]
+		[Display(Name = "Plywood Length (inch)")]
 		public double plywoodLength { get; set; }
 
-		[Display(Name = "Plywood Width")]
+		[Display(Name = "Plywood Width (inch)")]
 		public double plywoodWidth { get; set; }
 
-		[Display(Name = "Stairs riser height")]
+		[Display(Name = "Stairs riser height (m)")]
 		public double riserHeight { get; set; }
 
-		[Display(Name = "Stairs thread depth")]
+		[Display(Name = "Stairs thread depth (m)")]
 		public double threadDepth { get; set; }
 
-		[Display(Name = "Wastage")]
+		[Display(Name = "Stairs width (m)")]
+		public double stairsWidth { get; set; }
+
+		[Display(Name = "Wastage (%)")]
 		public double wasteage { get; set; }
 
-		[Display(Name = "Provisions")]
+		[Display(Name = "Provisions (%)")]
 		public double provisions { get; set; }
 	}
 
@@ -157,6 +211,7 @@ namespace Frilou_UI_V2.Models
 		public int MaterialQuantityWastage { get; set; }
 		public int MaterialQuantityProvisions { get; set; }
 		public double MaterialCost { get; set; }
+		public double MarkedUpCost { get; set; }
 		public double MaterialAmount { get; set; }
 		public double LabourCost { get; set; }
 		public double TotalUnitRate { get; set; }
@@ -193,6 +248,10 @@ namespace Frilou_UI_V2.Models
 
 		public double Wastage { get; set; }
 		public double Provisions { get; set; }
+
+
+		[Display(Name = "Markup (%)")]
+		public double Markup { get; set; }
 
 
 		[Display(Name = "BOM Creation Date")]

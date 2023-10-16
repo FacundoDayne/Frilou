@@ -23,12 +23,15 @@ using System.Drawing.Text;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Data.Entity.Core.Metadata.Edm;
 
+using Microsoft.Data.SqlClient;
+
 
 namespace Frilou_UI_V2.Controllers
 {
 	public class AdminController : Controller
 	{
-		private readonly string connectionstring = "Data Source=localhost;port=3306;Initial Catalog=bom_mce_db;User Id=root;password=password123;";
+		private readonly string oldconnectionstring = "Data Source=localhost;port=3306;Initial Catalog=bom_mce_db;User Id=root;password=password123;";
+		private readonly string connectionstring = @"Server=LAPTOP-HJA4M31O\SQLEXPRESS;Database=bom_mce_db;User Id=bom_debug;Password=password123;Encrypt=False;Trusted_Connection=False;MultipleActiveResultSets=true";
 		public IActionResult Index()
 		{
 			return View();
@@ -48,18 +51,18 @@ namespace Frilou_UI_V2.Controllers
 		public async Task<IActionResult> CreateProject(ProjectModel model)
 		{
 			uint id = 0;
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`projects` " +
-					"(`project_title`,`project_client_name`,`project_client_contact`,`project_address`,`project_city`, " +
-					"`project_region`,`project_country`,`project_latitude`,`project_longtitude`,`project_date`, " +
-					"`project_engineer_id`,`building_types_id`,`project_building_storeys`,`project_building_floorheight`, " +
-					"`project_building_length`,`project_building_width`) VALUES " +
+				using (SqlCommand command = new SqlCommand("INSERT INTO projects " +
+					"(project_title,project_client_name,project_client_contact,project_address,project_city, " +
+					"project_region,project_country,project_latitude,project_longtitude,project_date, " +
+					"project_engineer_id,building_types_id,project_building_storeys,project_building_floorheight, " +
+					"project_building_length,project_building_width) VALUES " +
 					"(@project_title,@project_client_name,@project_client_contact,@project_address,@project_city,@project_region, " +
 					"@project_country,@project_latitude,@project_longtitude,@project_date,@project_engineer_id,@building_types_id, " +
 					"@project_building_storeys,@project_building_floorheight,@project_building_length,@project_building_width)" +
-					"; SELECT last_insert_id() FROM projects;"))
+					"; SELECT SCOPE_IDENTITY() FROM projects;"))
 				{
 					command.Parameters.AddWithValue("@project_title",				model.Title);
 					command.Parameters.AddWithValue("@project_client_name",			model.ClientName);
@@ -87,17 +90,17 @@ namespace Frilou_UI_V2.Controllers
 		public IActionResult ProjectView(int id)
 		{
 			ProjectViewModel model = new ProjectViewModel();
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM projects a " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM projects a " +
 					"INNER JOIN employee_info b ON a.project_engineer_id = b.employee_info_id " +
 					"INNER JOIN building_types c ON a.building_types_id = c.building_types_id " +
 					"WHERE a.project_id = @project_id"))
 				{
 					command.Parameters.AddWithValue("@project_id", id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while(sdr.Read())
 						{
@@ -118,7 +121,7 @@ namespace Frilou_UI_V2.Controllers
 						}
 					}
 				}
-				using (MySqlCommand command = new MySqlCommand("SELECT last_insert_id() FROM bom WHERE project_id = @project_id;"))
+				using (SqlCommand command = new SqlCommand("SELECT SCOPE_IDENTITY() FROM bom WHERE project_id = @project_id;"))
 				{
 					command.Parameters.AddWithValue("@project_id", id);
 					command.Connection = conn;
@@ -140,13 +143,13 @@ namespace Frilou_UI_V2.Controllers
 		{
 			List<EngineerItem> engineers = new List<EngineerItem>();
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM employee_info a INNER JOIN user_credentials b ON a.user_credentials_id = b.user_id WHERE b.user_role = 2;;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM employee_info a INNER JOIN user_credentials b ON a.user_credentials_id = b.user_id WHERE b.user_role = 2;;"))
 				{
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -166,13 +169,13 @@ namespace Frilou_UI_V2.Controllers
 		{
 			List<EngineerItem> engineers = new List<EngineerItem>();
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM building_types;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM building_types;"))
 				{
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{

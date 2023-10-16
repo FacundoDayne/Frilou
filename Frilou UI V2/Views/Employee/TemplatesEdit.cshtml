@@ -36,6 +36,74 @@
 			</div>
 		</div>
 
+		<h2>Template Building Specifications</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+					<td>@Html.LabelFor(m=>m.NumberOfStoreys, new { @class = "col-md-2 control-label" })</td>
+					</td>
+					<td>
+						@Html.TextAreaFor(m=>m.NumberOfStoreys, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.NumberOfStoreys, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<td>@Html.LabelFor(m=>m.FloorHeight, new { @class = "col-md-2 control-label" })</td>
+					</td>
+					<td>
+						@Html.TextAreaFor(m=>m.FloorHeight, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.FloorHeight, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<td>@Html.LabelFor(m=>m.BuildingWidth, new { @class = "col-md-2 control-label" })</td>
+					</td>
+					<td>
+						@Html.TextAreaFor(m=>m.BuildingWidth, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.BuildingWidth, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<td>@Html.LabelFor(m=>m.BuildingLength, new { @class = "col-md-2 control-label" })</td>
+					</td>
+					<td>
+						@Html.TextAreaFor(m=>m.BuildingLength, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m=>m.BuildingLength, "Enter project title", new { @class = "text-danger" })
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2>Building Materials</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>Material</th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+
+				@for (int x = 0; x < Model.materials.Count; x++)
+				{
+					@Html.HiddenFor(m=>m.materials[0].ID)
+					@Html.HiddenFor(m=>m.materials[0].Name)
+					<tr>
+						<th>@Model.materials[x].Name</th>
+						<th>@Html.CheckBoxFor(m=>m.materials[0].Checked)</th>
+						<th></th>
+						<th></th>
+					</tr>
+				}
+			</tbody>
+		</table>
+
 		<h2>Template Formula Constants</h2>
 		<table>
 			<thead>

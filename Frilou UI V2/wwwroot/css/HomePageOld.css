@@ -1,0 +1,70 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    background-image: url('../../Images/bgImage.jpg'); /* Set your background image here */
+    background-blend-mode: darken;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    background-color: rgba(0, 0, 0, 0.5); /* Darker background color to make the image darker */
+}
+
+.navbar {
+    background-color: rgba(0, 0, 0, 5); /* Semi-transparent black background for the navbar */
+    padding: 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+    .navbar h1 {
+        color: white;
+        text-align: left;
+    }
+
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.3); /* Set the transparency here (0.7 in this case) */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    backdrop-filter:blur(20px);
+}
+
+    .login-container h2 {
+        color: white;
+        text-align: center;
+    }
+
+    .login-container input[type="text"],
+    .login-container input[type="password"],
+    .usernameInput,
+    .passwordInput{
+        width: 100%;
+        padding: 5px;
+        margin: 20px 0;
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+    }
+
+    .login-container input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 20px;
+        background-color: black;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .login-container input[type="submit"]:hover {
+            background-color: gray;
+        }

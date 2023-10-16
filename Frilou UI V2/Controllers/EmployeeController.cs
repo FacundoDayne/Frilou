@@ -22,13 +22,16 @@ using Newtonsoft.Json.Linq;
 using System.Drawing.Text;
 using Microsoft.AspNetCore.RateLimiting;
 
+using Microsoft.Data.SqlClient;
+
 
 namespace Frilou_UI_V2.Controllers
 {
 	public class EmployeeController : Controller
 	{
-		private readonly string connectionstring = "Data Source=localhost;port=3306;Initial Catalog=bom_mce_db;User Id=root;password=password123;";
-		
+		private readonly string oldconnectionstring = "Data Source=localhost;port=3306;Initial Catalog=bom_mce_db;User Id=root;password=password123;";
+		private readonly string connectionstring = @"Server=LAPTOP-HJA4M31O\SQLEXPRESS;Database=bom_mce_db;User Id=bom_debug;Password=password123;Encrypt=False;Trusted_Connection=False;MultipleActiveResultSets=true";
+
 		public IActionResult Index()
 		{
 			EmployeeDashboardModel model = new EmployeeDashboardModel();
@@ -40,10 +43,10 @@ namespace Frilou_UI_V2.Controllers
 		{
 			List<EmployeeNewProject> projects = new List<EmployeeNewProject>();
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM projects a " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM projects a " +
 					"LEFT JOIN bom b " +
 					"ON a.project_id = b.project_id " +
 					"WHERE b.project_id IS NULL " +
@@ -51,7 +54,7 @@ namespace Frilou_UI_V2.Controllers
 				{
 					command.Parameters.AddWithValue("@project_engineer_id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -73,14 +76,14 @@ namespace Frilou_UI_V2.Controllers
 		{
 			List<TemplateListItem> model = new List<TemplateListItem>();
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM employee_templates WHERE employee_id = @employee_id;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM employee_templates WHERE employee_id = @employee_id;"))
 				{
 					command.Parameters.AddWithValue("@employee_id", HttpContext.Session.GetInt32("EmployeeID"));
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -109,19 +112,19 @@ namespace Frilou_UI_V2.Controllers
 		public async Task<ActionResult> NewTemplate(NewTemplateModel model)
 		{
 			int id = 0;
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlTransaction transaction = conn.BeginTransaction())
+				using (SqlTransaction transaction = conn.BeginTransaction())
 				{
-					using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`template_formula_constants` " +
-						"(`floor_thickness`,`wall_thickness`,`rebar_thickness`,`nail_interval`,`hollow_block_constant`,`support_beam_length`, " +
-						"`support_beam_width`,`support_beam_interval`,`concrete_ratio_cement`,`concrete_ratio_sand`,`concrete_ratio_aggregate`, " +
-						"`plywood_length`,`plywood_width`,`riser_height`,`thread_depth`,`wastage`,`provisions`) VALUES( " +
+					using (SqlCommand command = new SqlCommand("INSERT INTO template_formula_constants " +
+						"(floor_thickness,wall_thickness,rebar_thickness,nail_interval,hollow_block_constant,support_beam_length, " +
+						"support_beam_width,support_beam_interval,concrete_ratio_cement,concrete_ratio_sand,concrete_ratio_aggregate, " +
+						"plywood_length,plywood_width,riser_height,thread_depth,wastage,provisions) VALUES( " +
 						"@floor_thickness,@wall_thickness,@rebar_thickness,@nail_interval,@hollow_block_constant,@support_beam_length, " +
 						"@support_beam_width,@support_beam_interval,@concrete_ratio_cement,@concrete_ratio_sand,@concrete_ratio_aggregate, " +
 						"@plywood_length,@plywood_width,@riser_height,@thread_depth,@wastage,@provisions); " +
-						"SELECT last_insert_id() FROM `bom_mce_db`.`template_formula_constants`;"))
+						"SELECT SCOPE_IDENTITY() FROM template_formula_constants;"))
 					{
 						command.Parameters.AddWithValue("@floor_thickness",				model.floorThickness		);
 						command.Parameters.AddWithValue("@wall_thickness",				model.wallThickness			);
@@ -144,8 +147,8 @@ namespace Frilou_UI_V2.Controllers
 						command.Transaction = transaction;
 						id = Convert.ToInt32(command.ExecuteScalar());
 					}
-					using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`employee_templates` " +
-						"(`employee_id`, `formula_constants_id`, `template_description`, `template_descritpion_long`) VALUES ( " +
+					using (SqlCommand command = new SqlCommand("INSERT INTO employee_templates " +
+						"(employee_id, formula_constants_id, template_description, template_descritpion_long) VALUES ( " +
 						"@employee_id, @formula_constants_id, @template_description, @template_descritpion_long);"))
 					{
 						command.Parameters.AddWithValue("@employee_id", (int)HttpContext.Session.GetInt32("EmployeeID"));
@@ -167,16 +170,16 @@ namespace Frilou_UI_V2.Controllers
 		{
 			EditTemplateModel model = new EditTemplateModel();
 			model.ID = (int)id;
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM employee_templates a " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM employee_templates a " +
 					"INNER JOIN template_formula_constants b ON a.formula_constants_id = b.formula_constants_id " +
 					"WHERE template_id = @template_id;"))
 				{
-					command.Parameters.AddWithValue("@template_id", (uint)id);
+					command.Parameters.AddWithValue("@template_id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -218,19 +221,19 @@ namespace Frilou_UI_V2.Controllers
 		public IActionResult TemplatesEdit(EditTemplateModel model)
 		{
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("UPDATE `bom_mce_db`.`employee_templates` SET " +
-					"`template_description` = @template_description, `template_descritpion_long` = @template_descritpion_long " +
-					"WHERE `template_id` = @template_id;" +
-					"UPDATE `bom_mce_db`.`template_formula_constants` SET " +
-					"`floor_thickness` = @floor_thickness, `wall_thickness` = @wall_thickness, `rebar_thickness` = @rebar_thickness," +
-					"`nail_interval` = @nail_interval, `hollow_block_constant` = @hollow_block_constant, `support_beam_length` = @support_beam_length, " +
-					"`support_beam_width` = @support_beam_width, `support_beam_interval` = @support_beam_interval, `concrete_ratio_cement` = @concrete_ratio_cement," +
-					"`concrete_ratio_sand` = @concrete_ratio_sand, `concrete_ratio_aggregate` = @concrete_ratio_aggregate, `plywood_length` = @plywood_length, " +
-					"`plywood_width` = @plywood_width, `riser_height` = @riser_height, `thread_depth` = @thread_depth, `wastage` = @wastage, `provisions` = @provisions " +
-					"WHERE `formula_constants_id` = @formula_constants_id;"))
+				using (SqlCommand command = new SqlCommand("UPDATE employee_templates SET " +
+					"template_description = @template_description, template_descritpion_long = @template_descritpion_long " +
+					"WHERE template_id = @template_id;" +
+					"UPDATE template_formula_constants SET " +
+					"floor_thickness = @floor_thickness, wall_thickness = @wall_thickness, rebar_thickness = @rebar_thickness," +
+					"nail_interval = @nail_interval, hollow_block_constant = @hollow_block_constant, support_beam_length = @support_beam_length, " +
+					"support_beam_width = @support_beam_width, support_beam_interval = @support_beam_interval, concrete_ratio_cement = @concrete_ratio_cement," +
+					"concrete_ratio_sand = @concrete_ratio_sand, concrete_ratio_aggregate = @concrete_ratio_aggregate, plywood_length = @plywood_length, " +
+					"plywood_width = @plywood_width, riser_height = @riser_height, thread_depth = @thread_depth, wastage = @wastage, provisions = @provisions " +
+					"WHERE formula_constants_id = @formula_constants_id;"))
 				{
 					command.Connection = conn;
 
@@ -271,17 +274,17 @@ namespace Frilou_UI_V2.Controllers
 			string location = model.Latitude + "," + model.Longtitude;
 
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM projects a " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM projects a " +
 					"INNER JOIN employee_info b ON a.project_engineer_id = b.employee_info_id " +
 					"INNER JOIN building_types c ON a.building_types_id = c.building_types_id " +
 					"WHERE a.project_id = @project_id"))
 				{
 					command.Parameters.AddWithValue("@project_id", id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -303,11 +306,11 @@ namespace Frilou_UI_V2.Controllers
 						}
 					}
 				}
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM employee_templates WHERE employee_id = @employee_id;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM employee_templates WHERE employee_id = @employee_id;"))
 				{
 					command.Parameters.AddWithValue("@employee_id", HttpContext.Session.GetInt32("EmployeeID"));
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -373,16 +376,16 @@ namespace Frilou_UI_V2.Controllers
 				 /*new*/        wastage = 0,
 				 /*new*/        provisions = 0;
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM employee_templates a " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM employee_templates a " +
 					"INNER JOIN template_formula_constants b ON a.formula_constants_id = b.formula_constants_id " +
 					"WHERE template_id = @template_id;"))
 				{
-					command.Parameters.AddWithValue("@template_id", Convert.ToUInt32(model.TemplateID));
+					command.Parameters.AddWithValue("@template_id", Convert.ToInt32(model.TemplateID));
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -451,7 +454,7 @@ namespace Frilou_UI_V2.Controllers
 								plywoodPricePerSqm = plywoodPrice * plywoodSheetsPerSqm
 
 				;
-			uint RebarCostID = Cost_rebar.SupplierMaterialID,
+			int RebarCostID = Cost_rebar.SupplierMaterialID,
 				HollowBlockCostID = Cost_Hollowblock.SupplierMaterialID,
 				CementCostID = Cost_Cement.SupplierMaterialID,
 				SandCostID = Cost_Sand.SupplierMaterialID,
@@ -638,19 +641,19 @@ namespace Frilou_UI_V2.Controllers
 		{
 			TempData["BOMGenerateData"] = JsonConvert.SerializeObject(model);
 			Debug.WriteLine("boolet");
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlTransaction trans = conn.BeginTransaction())
+				using (SqlTransaction trans = conn.BeginTransaction())
 				{
 					int bom_id = 0;
-					using (MySqlCommand command = new MySqlCommand("INSERT INTO `bom_mce_db`.`bom` (`bom_creation_date`, `project_id`, `bom_formula_id`) VALUES ( " +
+					using (SqlCommand command = new SqlCommand("INSERT INTO bom (bom_creation_date, project_id, bom_formula_id) VALUES ( " +
 						"@bom_creation_date, @project_id, @bom_formula_id);" +
-						" SELECT last_insert_id() FROM `bom_mce_db`.`bom`;"))
+						" SELECT SCOPE_IDENTITY() FROM bom;"))
 					{
 						command.Parameters.AddWithValue("@bom_creation_date", DateTime.Today.ToString("yyyy-MM-dd"));
-						command.Parameters.AddWithValue("@project_id", (uint)model.ProjectID);
-						command.Parameters.AddWithValue("@bom_formula_id", (uint)model.FormulaID);
+						command.Parameters.AddWithValue("@project_id", (int)model.ProjectID);
+						command.Parameters.AddWithValue("@bom_formula_id", (int)model.FormulaID);
 						command.Connection = conn;
 						command.Transaction = trans;
 						bom_id = Convert.ToInt32(command.ExecuteScalar());
@@ -658,11 +661,11 @@ namespace Frilou_UI_V2.Controllers
 
 					foreach (Employee_BOM_Materials_Lists list in model.lists)
 					{
-						MySqlCommand command2 = new MySqlCommand(
-							"INSERT INTO `bom_mce_db`.`bom_lists` (`bom_list_desc`,`bom_id`) VALUES " +
+						SqlCommand command2 = new SqlCommand(
+							"INSERT INTO bom_lists (bom_list_desc,bom_id) VALUES " +
 							"(@list_desc," +
 							"@bom_id);" +
-							"SELECT last_insert_id() FROM `bom_mce_db`.`bom_lists`;");
+							"SELECT SCOPE_IDENTITY() FROM bom_lists;");
 
 						command2.Parameters.AddWithValue("@list_desc", list.Description);
 						command2.Parameters.AddWithValue("@bom_id", bom_id);
@@ -675,11 +678,11 @@ namespace Frilou_UI_V2.Controllers
 
 						foreach (Employee_BOM_Materials_Items item in list.Items)
 						{
-							MySqlCommand command3 = new MySqlCommand(
-							"INSERT INTO `bom_mce_db`.`bom_items` (`bom_list_id`,`bom_list_desc`) VALUES " +
+							SqlCommand command3 = new SqlCommand(
+							"INSERT INTO bom_items (bom_list_id,bom_list_desc) VALUES " +
 							"(@bom_list_id," +
 							"@bom_list_desc);" +
-							"SELECT last_insert_id() FROM `bom_mce_db`.`bom_items`;");
+							"SELECT SCOPE_IDENTITY() FROM bom_items;");
 
 							command3.Parameters.AddWithValue("@bom_list_id", bom_list_id);
 							command3.Parameters.AddWithValue("@bom_list_desc", item.Description);
@@ -692,8 +695,8 @@ namespace Frilou_UI_V2.Controllers
 
 							foreach (Employee_BOM_Materials_Subitems subitem in item.Subitems)
 							{
-								MySqlCommand command4 = new MySqlCommand(
-									"INSERT INTO `bom_mce_db`.`bom_subitems` (`material_id`,`bom_subitem_quantity`,`bom_item_id`, `supplier_material_id`) VALUES " +
+								SqlCommand command4 = new SqlCommand(
+									"INSERT INTO bom_subitems (material_id,bom_subitem_quantity,bom_item_id, supplier_material_id) VALUES " +
 									"(@item_id," +
 									"@item_quantity," +
 									"@bom_item_id, " +
@@ -724,18 +727,18 @@ namespace Frilou_UI_V2.Controllers
 		{
 			EmployeeBOMModel model = new EmployeeBOMModel();
 			model.templates = new List<Employee_BOM_Template_List>();
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
 					"INNER JOIN template_formula_constants c ON a.bom_formula_id = formula_constants_id " +
 					"INNER JOIN building_types d ON b.building_types_id = d.building_types_id " +
 					"WHERE a.bom_id = @id;"))
 				{
 					
-					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Parameters.AddWithValue("@id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -762,11 +765,11 @@ namespace Frilou_UI_V2.Controllers
 					}
 				}
 				model.lists = new List<Employee_BOM_Materials_Lists>();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
 				{
-					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Parameters.AddWithValue("@id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						int num = 1;
 						while (sdr.Read())
@@ -784,11 +787,11 @@ namespace Frilou_UI_V2.Controllers
 				}
 				for (int x = 0; x < model.lists.Count; x++)
 				{
-					using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
+					using (SqlCommand command = new SqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
 					{
-						command.Parameters.AddWithValue("@id", (uint)model.lists[x].ListID);
+						command.Parameters.AddWithValue("@id", (int)model.lists[x].ListID);
 						command.Connection = conn;
-						using (MySqlDataReader sdr = command.ExecuteReader())
+						using (SqlDataReader sdr = command.ExecuteReader())
 						{
 							int num = 1;
 							while (sdr.Read())
@@ -806,16 +809,16 @@ namespace Frilou_UI_V2.Controllers
 					}
 					for (int y = 0; y < model.lists[x].Items.Count; y++)
 					{
-						using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_subitems a " +
+						using (SqlCommand command = new SqlCommand("SELECT * FROM bom_subitems a " +
 							"INNER JOIN materials b ON a.material_id = b.material_id " +
 							"INNER JOIN supplier_materials c ON a.supplier_material_id = c.supplier_material_id " +
 							"INNER JOIN measurement_units d ON b.measurement_unit_id = d.measurement_unit_id " +
 							"INNER JOIN supplier_info e ON e.supplier_id = c.supplier_id " +
 							"WHERE bom_item_id = @id;"))
 						{
-							command.Parameters.AddWithValue("@id", (uint)model.lists[x].Items[y].ItemID);
+							command.Parameters.AddWithValue("@id", (int)model.lists[x].Items[y].ItemID);
 							command.Connection = conn;
-							using (MySqlDataReader sdr = command.ExecuteReader())
+							using (SqlDataReader sdr = command.ExecuteReader())
 							{
 								int num = 1;
 								while (sdr.Read())
@@ -860,18 +863,18 @@ namespace Frilou_UI_V2.Controllers
 		{
 			EmployeeBOMModel model = new EmployeeBOMModel();
 			model.templates = new List<Employee_BOM_Template_List>();
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
 					"INNER JOIN template_formula_constants c ON a.bom_formula_id = formula_constants_id " +
 					"INNER JOIN building_types d ON b.building_types_id = d.building_types_id " +
 					"WHERE a.bom_id = @id;"))
 				{
 
-					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Parameters.AddWithValue("@id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -898,11 +901,11 @@ namespace Frilou_UI_V2.Controllers
 					}
 				}
 				model.lists = new List<Employee_BOM_Materials_Lists>();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
 				{
-					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Parameters.AddWithValue("@id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						int num = 1;
 						while (sdr.Read())
@@ -920,11 +923,11 @@ namespace Frilou_UI_V2.Controllers
 				}
 				for (int x = 0; x < model.lists.Count; x++)
 				{
-					using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
+					using (SqlCommand command = new SqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
 					{
-						command.Parameters.AddWithValue("@id", (uint)model.lists[x].ListID);
+						command.Parameters.AddWithValue("@id", (int)model.lists[x].ListID);
 						command.Connection = conn;
-						using (MySqlDataReader sdr = command.ExecuteReader())
+						using (SqlDataReader sdr = command.ExecuteReader())
 						{
 							int num = 1;
 							while (sdr.Read())
@@ -942,16 +945,16 @@ namespace Frilou_UI_V2.Controllers
 					}
 					for (int y = 0; y < model.lists[x].Items.Count; y++)
 					{
-						using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_subitems a " +
+						using (SqlCommand command = new SqlCommand("SELECT * FROM bom_subitems a " +
 							"INNER JOIN materials b ON a.material_id = b.material_id " +
 							"INNER JOIN supplier_materials c ON a.supplier_material_id = c.supplier_material_id " +
 							"INNER JOIN measurement_units d ON b.measurement_unit_id = d.measurement_unit_id " +
 							"INNER JOIN supplier_info e ON e.supplier_id = c.supplier_id " +
 							"WHERE bom_item_id = @id;"))
 						{
-							command.Parameters.AddWithValue("@id", (uint)model.lists[x].Items[y].ItemID);
+							command.Parameters.AddWithValue("@id", (int)model.lists[x].Items[y].ItemID);
 							command.Connection = conn;
-							using (MySqlDataReader sdr = command.ExecuteReader())
+							using (SqlDataReader sdr = command.ExecuteReader())
 							{
 								int num = 1;
 								while (sdr.Read())
@@ -996,17 +999,17 @@ namespace Frilou_UI_V2.Controllers
 		{
 			List<Employee_BOM_List_Item> projects = new List<Employee_BOM_List_Item>();
 
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT *, c.mce_id IS NOT NULL AS HasReference FROM bom a " +
+				using (SqlCommand command = new SqlCommand("SELECT *, c.mce_id IS NOT NULL AS HasReference FROM bom a " +
 					"INNER JOIN projects b ON a.project_id = b.project_id " +
 					"LEFT JOIN mce c ON a.bom_id = c.bom_id " +
 					"WHERE b.project_engineer_id = @project_engineer_id;"))
 				{
 					command.Parameters.AddWithValue("@project_engineer_id", HttpContext.Session.GetInt32("EmployeeID"));
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -1029,18 +1032,18 @@ namespace Frilou_UI_V2.Controllers
 		{
 			EmployeeBOMModel model = new EmployeeBOMModel();
 			model.templates = new List<Employee_BOM_Template_List>();
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
+				using (SqlCommand command = new SqlCommand("SELECT * FROM bom a INNER JOIN projects b ON a.project_id = b.project_id " +
 					"INNER JOIN template_formula_constants c ON a.bom_formula_id = formula_constants_id " +
 					"INNER JOIN building_types d ON b.building_types_id = d.building_types_id " +
 					"WHERE a.bom_id = @id;"))
 				{
 
-					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Parameters.AddWithValue("@id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -1068,11 +1071,11 @@ namespace Frilou_UI_V2.Controllers
 					}
 				}
 				model.lists = new List<Employee_BOM_Materials_Lists>();
-				using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
+				using (SqlCommand command = new SqlCommand("SELECT * FROM bom_lists WHERE bom_id = @id;"))
 				{
-					command.Parameters.AddWithValue("@id", (uint)id);
+					command.Parameters.AddWithValue("@id", (int)id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						int num = 1;
 						while (sdr.Read())
@@ -1090,11 +1093,11 @@ namespace Frilou_UI_V2.Controllers
 				}
 				for (int x = 0; x < model.lists.Count; x++)
 				{
-					using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
+					using (SqlCommand command = new SqlCommand("SELECT * FROM bom_items WHERE bom_list_id = @id;"))
 					{
-						command.Parameters.AddWithValue("@id", (uint)model.lists[x].ListID);
+						command.Parameters.AddWithValue("@id", (int)model.lists[x].ListID);
 						command.Connection = conn;
-						using (MySqlDataReader sdr = command.ExecuteReader())
+						using (SqlDataReader sdr = command.ExecuteReader())
 						{
 							int num = 1;
 							while (sdr.Read())
@@ -1112,16 +1115,16 @@ namespace Frilou_UI_V2.Controllers
 					}
 					for (int y = 0; y < model.lists[x].Items.Count; y++)
 					{
-						using (MySqlCommand command = new MySqlCommand("SELECT * FROM bom_subitems a " +
+						using (SqlCommand command = new SqlCommand("SELECT * FROM bom_subitems a " +
 							"INNER JOIN materials b ON a.material_id = b.material_id " +
 							"INNER JOIN supplier_materials c ON a.supplier_material_id = c.supplier_material_id " +
 							"INNER JOIN measurement_units d ON b.measurement_unit_id = d.measurement_unit_id " +
 							"INNER JOIN supplier_info e ON e.supplier_id = c.supplier_id " +
 							"WHERE bom_item_id = @id;"))
 						{
-							command.Parameters.AddWithValue("@id", (uint)model.lists[x].Items[y].ItemID);
+							command.Parameters.AddWithValue("@id", (int)model.lists[x].Items[y].ItemID);
 							command.Connection = conn;
-							using (MySqlDataReader sdr = command.ExecuteReader())
+							using (SqlDataReader sdr = command.ExecuteReader())
 							{
 								int num = 1;
 								while (sdr.Read())
@@ -1188,12 +1191,19 @@ namespace Frilou_UI_V2.Controllers
 						for (int z = 0; z < model.lists[x].Items[y].Subitems.Count; z++)
 						{
 							Debug.WriteLine("Bolshevik");
+							Debug.WriteLine(Math.Round(((double)model.Markup / 100.00) + 1.00, 2));
+							model.lists[x].Items[y].Subitems[z].MarkedUpCost =
+								Math.Ceiling(
+								model.lists[x].Items[y].Subitems[z].MaterialCost *
+								Math.Round((model.Markup / 100) + 1, 2));
 							model.lists[x].Items[y].Subitems[z].TotalUnitRate =
-								model.lists[x].Items[y].Subitems[z].MaterialCost +
-								model.lists[x].Items[y].Subitems[z].LabourCost;
+								Math.Ceiling(
+								model.lists[x].Items[y].Subitems[z].MarkedUpCost +
+								model.lists[x].Items[y].Subitems[z].LabourCost);
 							model.lists[x].Items[y].Subitems[z].MaterialAmount =
+								Math.Ceiling(
 								model.lists[x].Items[y].Subitems[z].TotalUnitRate *
-								model.lists[x].Items[y].Subitems[z].MaterialQuantityProvisions;
+								model.lists[x].Items[y].Subitems[z].MaterialQuantityProvisions);
 						}
 					}
 				}
@@ -1213,7 +1223,14 @@ namespace Frilou_UI_V2.Controllers
 			}
 			else if (submitButton == "Submit")
 			{
-
+				using (SqlConnection conn = new SqlConnection(connectionstring))
+				{
+					conn.Open();
+					using (SqlTransaction trans = conn.BeginTransaction())
+					{
+						//using (SqlCommand())
+					}
+				}
 				return View(model);
 			}
 			
@@ -1224,20 +1241,20 @@ namespace Frilou_UI_V2.Controllers
 
 
 
-		public Employee_BOM_Materials_Subitems GetMaterial(int material_id, double Quantity, string destination, int subitem_num, double cost, double wastage, double provisions, uint SupplierMaterialID)
+		public Employee_BOM_Materials_Subitems GetMaterial(int material_id, double Quantity, string destination, int subitem_num, double cost, double wastage, double provisions, int SupplierMaterialID)
 		{
 			Employee_BOM_Materials_Subitems item = new Employee_BOM_Materials_Subitems();
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT a.material_id, a.material_desc, b.measurement_unit_desc_short FROM materials a " +
+				using (SqlCommand command = new SqlCommand("SELECT a.material_id, a.material_desc, b.measurement_unit_desc_short FROM materials a " +
 					" INNER JOIN measurement_units b " +
 					" ON a.measurement_unit_id = b.measurement_unit_id " +
 					" WHERE material_id = @material_id;"))
 				{
 					command.Parameters.AddWithValue("@material_id", material_id);
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
@@ -1258,41 +1275,41 @@ namespace Frilou_UI_V2.Controllers
 			return item;
 		}
 
-		private MaterialsCostComparisonItem GetBestPrice(uint MaterialID, string destination)
+		private MaterialsCostComparisonItem GetBestPrice(int MaterialID, string destination)
 		{
 			string _apikey = "ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN";
 
 			List<MaterialsCostComparisonItem> MaterialsCosts = new List<MaterialsCostComparisonItem>();
-			using (MySqlConnection conn = new MySqlConnection(connectionstring))
+			using (SqlConnection conn = new SqlConnection(connectionstring))
 			{
 				conn.Open();
-				using (MySqlCommand command = new MySqlCommand("SELECT c.material_id AS MaterialID, c.material_desc_long AS Material, a.supplier_material_id AS SupplierMaterialID, " +
+				using (SqlCommand command = new SqlCommand("SELECT c.material_id AS MaterialID, c.material_desc_long AS Material, a.supplier_material_id AS SupplierMaterialID, " +
 					"a.supplier_material_price AS Price, d.supplier_id AS SupplierID, d.supplier_desc AS Supplier, d.employee_id AS Employee, " +
 					"CONCAT(d.supplier_coordinates_latitude, ',', d.supplier_coordinates_longtitude) AS Coordinates " +
 					"FROM supplier_materials a JOIN (" +
-					"SELECT MIN(b.supplier_material_price) AS min_value FROM supplier_materials b WHERE b.material_id = @id AND b.supplier_material_availability = 1  AND b.supplier_material_archived = false) min_table " +
+					"SELECT MIN(b.supplier_material_price) AS min_value FROM supplier_materials b WHERE b.material_id = @id AND b.supplier_material_availability = 1  AND b.supplier_material_archived = 0) min_table " +
 					"ON a.supplier_material_price = min_table.min_value " +
 					"INNER JOIN materials c ON a.material_id = c.material_id " +
 					"INNER JOIN supplier_info d ON a.supplier_id = d.supplier_id " +
 					"WHERE a.material_id = @id AND d.employee_id = @employee_id  " +
-					"AND a.supplier_material_availability = 1 AND a.supplier_material_archived = false ;"))
+					"AND a.supplier_material_availability = 1 AND a.supplier_material_archived = 0 ;"))
 				{
 					command.Parameters.AddWithValue("@id", MaterialID);
 					command.Parameters.AddWithValue("@employee_id", (int)HttpContext.Session.GetInt32("EmployeeID"));
 					command.Connection = conn;
-					using (MySqlDataReader sdr = command.ExecuteReader())
+					using (SqlDataReader sdr = command.ExecuteReader())
 					{
 						while (sdr.Read())
 						{
 							MaterialsCosts.Add(new MaterialsCostComparisonItem()
 							{
-								MaterialID = Convert.ToUInt32(sdr["MaterialID"]),
+								MaterialID = Convert.ToInt32(sdr["MaterialID"]),
 								Description_Long = sdr["Material"].ToString(),
 								Price = Convert.ToDouble(sdr["Price"]) / 100,
-								SupplierID = Convert.ToUInt32(sdr["SupplierID"]),
+								SupplierID = Convert.ToInt32(sdr["SupplierID"]),
 								SupplierDesc = sdr["Supplier"].ToString(),
 								SupplierCoords = sdr["Coordinates"].ToString(),
-								SupplierMaterialID = Convert.ToUInt32(sdr["SupplierMaterialID"])
+								SupplierMaterialID = Convert.ToInt32(sdr["SupplierMaterialID"])
 							});
 
 						}

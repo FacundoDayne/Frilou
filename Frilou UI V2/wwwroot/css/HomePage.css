@@ -1,70 +1,103 @@
-﻿body {
+﻿* {
     margin: 0;
     padding: 0;
-    background-image: url('../../Images/bgImage.jpg'); /* Set your background image here */
-    background-blend-mode: darken;
-    background-size: cover;
+    box-sizing: border-box;
+}
+
+body {
     font-family: Arial, sans-serif;
-    background-color: rgba(0, 0, 0, 0.5); /* Darker background color to make the image darker */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%), url(../../Images/bgImage.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .navbar {
-    background-color: rgba(0, 0, 0, 5); /* Semi-transparent black background for the navbar */
-    padding: 30px;
-    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    position: absolute;
     top: 0;
     left: 0;
-    right: 0;
     z-index: 1;
+    background-color: rgba(0, 0, 0, 1);
 }
 
-    .navbar h1 {
-        color: white;
-        text-align: left;
+.logos img {
+    float: left;
+    width: 80px;
+    height: 60px;
+}
+
+.menu ul {
+    text-align: center;
+    list-style: none;
+    display: flex;
+}
+
+.menu li {
+    margin-left: 20px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+    /*NEW*/
+    .menu a:hover {
+        color: #73d419;
     }
 
-.login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.3); /* Set the transparency here (0.7 in this case) */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+.hero {
     position: absolute;
     top: 50%;
     left: 50%;
+    margin-right: -50%;
     transform: translate(-50%, -50%);
-    backdrop-filter:blur(20px);
+    text-align: center;
 }
 
-    .login-container h2 {
-        color: white;
-        text-align: center;
-    }
-
-    .login-container input[type="text"],
-    .login-container input[type="password"],
-    .usernameInput,
-    .passwordInput{
-        width: 100%;
-        padding: 5px;
-        margin: 20px 0;
-        border: none;
-        border-bottom: 1px solid black;
-        outline: none;
-    }
-
-    .login-container input[type="submit"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 20px;
-        background-color: black;
+    .hero h1 {
+        font-size: 48px;
+        margin-bottom: 10px;
         color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
     }
 
-        .login-container input[type="submit"]:hover {
-            background-color: gray;
-        }
+    .hero .par {
+        font-size: 18px;
+        color: #fff;
+        margin-bottom: 30px;
+    }
+
+.cn {
+    width: 150px;
+    height: 50px;
+    background: #ff7200;
+    border: none;
+    font-size: 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.4s ease;
+    color: #fff;
+}
+
+    .cn a {
+        text-decoration: none;
+        color: #fff;
+    }
+
+    /*NEW*/
+    .cn:hover {
+        background-color: #73d419;
+    }

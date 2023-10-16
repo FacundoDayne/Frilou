@@ -23,12 +23,15 @@ using System.Drawing.Text;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Data.Entity.Core.Metadata.Edm;
 
+using System.Data.SqlClient;
+
 namespace Frilou_UI_V2.Controllers
 {
 	public class BOMController : Controller
 	{
 		private readonly ILogger<BOMController> _logger;
-		private readonly string connectionstring = "Data Source=localhost;port=3306;Initial Catalog=bom_mce_db;User Id=root;password=password123;";
+		private readonly string oldconnectionstring = "Data Source=localhost;port=3306;Initial Catalog=bom_mce_db;User Id=root;password=password123;";
+		private readonly string connectionstring = @"Server=LAPTOP-HJA4M31O\SQLEXPRESS;Database=bom_mce_db;User Id=bom_debug;Password=password123;";
 		BOMListOfMaterials mat = new BOMListOfMaterials();
 		List<BOMTemplate> temp = new List<BOMTemplate>();
 
@@ -561,7 +564,7 @@ namespace Frilou_UI_V2.Controllers
 					{
 						while (sdr.Read())
 						{
-							item.item_id = Convert.ToUInt32(sdr["category_id"]);
+							item.item_id = Convert.ToInt32(sdr["category_id"]);
 							item.item_desc = sdr["category_desc"].ToString();
 						}
 					}
@@ -575,7 +578,7 @@ namespace Frilou_UI_V2.Controllers
 						{
 							item.subitems.Add(new BOMSubitems()
 							{
-								item_id = Convert.ToUInt32(sdr["material_id"]),
+								item_id = Convert.ToInt32(sdr["material_id"]),
 								subitem_desc = sdr["material_desc"].ToString()
 							});
 						}
@@ -640,7 +643,7 @@ namespace Frilou_UI_V2.Controllers
 					{
 						while (sdr.Read())
 						{
-							item.item_id = Convert.ToUInt32(sdr["category_id"]);
+							item.item_id = Convert.ToInt32(sdr["category_id"]);
 							item.item_desc = sdr["category_desc"].ToString();
 						}
 					}
@@ -654,7 +657,7 @@ namespace Frilou_UI_V2.Controllers
 						{
 							item.subitems.Add(new BOMSubitems()
 							{
-								item_id = Convert.ToUInt32(sdr["material_id"]),
+								item_id = Convert.ToInt32(sdr["material_id"]),
 								subitem_desc = sdr["material_desc"].ToString()
 							});
 						}
@@ -677,7 +680,7 @@ namespace Frilou_UI_V2.Controllers
 			return item;
 		}
 
-		private MaterialsCostComparisonItem GetBestPrice(uint MaterialID, string destination)
+		private MaterialsCostComparisonItem GetBestPrice(int MaterialID, string destination)
 		{
 			string _apikey = "ApFkiZUGSuNuTphyHstPFnkvL0IGwOKelabezyQVt4RwYTD-yE5n5dMgmeHugQgN";
 
@@ -704,10 +707,10 @@ namespace Frilou_UI_V2.Controllers
 						{
 							MaterialsCosts.Add(new MaterialsCostComparisonItem()
 							{
-								MaterialID = Convert.ToUInt32(sdr["MaterialID"]),
+								MaterialID = Convert.ToInt32(sdr["MaterialID"]),
 								Description_Long = sdr["Material"].ToString(),
 								Price = Convert.ToDouble(sdr["Price"]) / 100,
-								SupplierID = Convert.ToUInt32(sdr["SupplierID"]),
+								SupplierID = Convert.ToInt32(sdr["SupplierID"]),
 								SupplierDesc = sdr["Supplier"].ToString(),
 								SupplierCoords = sdr["Coordinates"].ToString()
 							});
